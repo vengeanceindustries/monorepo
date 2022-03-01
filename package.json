@@ -1,7 +1,25 @@
 {
-  "private": true,
-  "workspaces": [
-    "component-library",
-    "frontend"
-  ]
+	"private": true,
+	"workspaces": [
+		"component-library",
+		"frontend"
+	],
+	"prettier": {
+		"trailingComma": "es5",
+		"singleQuote": true,
+		"tabWidth": 4,
+		"useTabs": true
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
 }

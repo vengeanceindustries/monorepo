@@ -1,0 +1,44 @@
+.Button {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	line-height: 1;
+	border: 1px solid;
+	background-color: #fff;
+	color: #000;
+	border-radius: 4px;
+}
+.Button:hover {
+	background-color: #ccc;
+	box-shadow: #666 inset 0 0 0 2px;
+}
+/* from example */
+.Button {
+	font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: 700;
+	border: 0;
+	border-radius: 3em;
+	cursor: pointer;
+	display: inline-block;
+	line-height: 1;
+}
+.Button--primary {
+	color: white;
+	background-color: #1ea7fd;
+}
+.Button--secondary {
+	color: #333;
+	background-color: transparent;
+	box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+}
+.Button--small {
+	font-size: 12px;
+	padding: 10px 16px;
+}
+.Button--medium {
+	font-size: 14px;
+	padding: 11px 20px;
+}
+.Button--large {
+	font-size: 16px;
+	padding: 12px 24px;
+}

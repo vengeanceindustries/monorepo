@@ -1,6 +1,7 @@
 {
 	"name": "component-library",
 	"version": "1.0.0",
+	"license": "MIT",
 	"scripts": {
 		"build": "react-scripts build",
 		"start": "react-scripts start",

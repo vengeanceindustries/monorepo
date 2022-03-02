@@ -4,13 +4,13 @@ import './Button.css';
 export interface ButtonProps {
 	label: string;
 	primary?: boolean;
-	size: string;
+	size?: string;
 }
 
 export default function Button({
 	label,
 	primary,
-	size,
+	size = 'small',
 }: ButtonProps): JSX.Element {
 	return (
 		<button

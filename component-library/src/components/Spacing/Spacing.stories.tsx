@@ -1,6 +1,8 @@
-import { Meta, Story } from '@storybook/react';
 import React from 'react';
+import { Meta, Story } from '@storybook/react';
+
 import Spacing, { SpacingProps } from './Spacing';
+import Button from '../Button';
 
 export default {
 	title: 'Example/Spacing',
@@ -11,6 +13,12 @@ export default {
 } as Meta<typeof Spacing>;
 
 const Template: Story<SpacingProps> = (args) => <Spacing {...args} />;
+
+export const SpacingAroundButton = Template.bind({});
+SpacingAroundButton.args = {
+	children: <Button label="button with spacing around" />,
+	padding: 1,
+};
 
 export const Padding1 = Template.bind({});
 Padding1.args = {

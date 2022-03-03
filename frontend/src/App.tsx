@@ -1,7 +1,7 @@
 import React from 'react';
-// import './App.css';
+
 import Heading from './Heading';
-import { Button } from '@ui-lib';
+import { Button, Spacing } from 'component-library';
 
 export default function App({}): JSX.Element {
 	return (
@@ -9,9 +9,9 @@ export default function App({}): JSX.Element {
 			<header className="App-header">
 				<Heading text="This is an h1 heading" />
 				<button>regular button</button>
-				<Button label="component button!" />
-				{/* <Spacing margin={2}>
-				</Spacing> */}
+				<Spacing margin={2}>
+					<Button label="component button!" />
+				</Spacing>
 			</header>
 		</div>
 	);

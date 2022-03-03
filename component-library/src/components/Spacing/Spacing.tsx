@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './Spacing.css';
+// import './Spacing.css';
 
 export type SpacingSize = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 

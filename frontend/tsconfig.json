@@ -20,8 +20,8 @@
 		"target": "es5",
 		"baseUrl": ".",
 		"paths": {
-			"@ui-lib": ["../component-library"],
-			"component-library": ["../component-library/index.ts"]
+			// "@components": ["../node_modules/component-library/"]
+			"component-library": ["../component-library/"]
 		}
 	}
 }

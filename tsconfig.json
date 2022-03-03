@@ -1,6 +1,11 @@
 {
 	"compilerOptions": {
 		"baseUrl": ".",
+		"paths": {
+			"design-tokens": ["../design-tokens/"],
+			"component-library": ["../component-library/"],
+			"UI-LIB": ["../component-library/"]
+		},
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,

@@ -63,4 +63,4 @@ ${button}
 `;
 
 writefile('dist/index.scss', scss);
-writefile('dist/index.ts', ts);
+writefile('dist/index.d.ts', ts);

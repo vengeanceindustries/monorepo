@@ -2,6 +2,7 @@
 	"private": true,
 	"workspaces": [
 		"component-library",
+		"design-tokens",
 		"frontend"
 	],
 	"prettier": {

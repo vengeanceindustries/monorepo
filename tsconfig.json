@@ -2,6 +2,11 @@
 	// "include": ["src"],
 	// "exclude": ["node_modules"],
 	"compilerOptions": {
+		"baseUrl": ".",
+		// "paths": {
+		// 	"component-library": ["../component-library/"],
+		// 	"UI-LIB": ["../component-library/"]
+		// },
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
@@ -15,13 +20,8 @@
 		// "noEmit": true,
 		"noFallthroughCasesInSwitch": true,
 		"resolveJsonModule": true,
-		// "skipLibCheck": true,
+		"skipLibCheck": true,
 		"strict": false,
-		"target": "es5",
-		"baseUrl": ".",
-		"paths": {
-			// "@components": ["../node_modules/component-library/"]
-			"component-library": ["../component-library/"]
-		}
+		"target": "es5"
 	}
 }

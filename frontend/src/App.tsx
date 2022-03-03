@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Heading from './Heading';
 import { Button, Spacing } from 'component-library';
 

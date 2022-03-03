@@ -1,0 +1,40 @@
+{
+	"site": "FL",
+	"name": "Foot Locker",
+	"brand": {
+		"primary": "$my_crimson",
+		"secondary": "$woodsmoke",
+		"highlight": "$my_crimson",
+		"black": "$woodsmoke",
+		"grey": "$emperor"
+	},
+	"font": {
+		"import": ["Roboto", "mono"]
+	},
+	"button": {
+		"primary": {
+			"color": "$black",
+			"border-color": "$white",
+			"background-color": "$white"
+		},
+		"secondary": {
+			"color": "$white",
+			"border-color": "$white",
+			"background-color": "$black"
+		}
+	},
+	"theme": {
+		"light": {
+			"color": "$black",
+			"background-color": "$white"
+		},
+		"dark": {
+			"color": "$white",
+			"background-color": "$mineshaft"
+		},
+		"accent": {
+			"color": "$white",
+			"background-color": "$brand_primary"
+		}
+	}
+}

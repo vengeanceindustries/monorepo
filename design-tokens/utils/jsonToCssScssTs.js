@@ -1,5 +1,18 @@
 // UTILS //
 
+function log(text, ...args) {
+	console.log(`🎨 Design Tokens ${text}`, ...args);
+}
+
+function warn(funcName, text, ...args) {
+	log(`${funcName} skipped: ❌ ${text}:`, ...args);
+}
+
+/** Share a message when files are successfully generated! 🦄✨🎉 */
+function successMessage(text, ...args) {
+	log(`🦄✨🎉 ${text}`, ...args);
+}
+
 function isTrueObject(obj) {
 	return obj && typeof obj === 'object' && !Array.isArray(obj);
 }
@@ -43,7 +56,7 @@ function titleCase(str) {
 	return camelize(str, { titleCase: true });
 }
 
-// CSS CUSTOM PROPERTISE AKA CSS VARIABLES //
+// CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
 
 function customProperties(obj, prefix = '') {
 	return sassVariable(obj, `${prefix}--`);
@@ -54,6 +67,14 @@ function customProperties(obj, prefix = '') {
  * @param {string} root "selector" name of context for properties, defaults to document :root
  */
 function globalProperties(obj, root = ':root') {
+	if (!isTrueObject(obj)) {
+		warn(
+			'globalProperties',
+			'cannot create custom-properties from non-object',
+			obj
+		);
+		return '';
+	}
 	return `${root} {\r${customProperties(obj, `\t`)}};\r\n`;
 }
 
@@ -62,32 +83,52 @@ function globalProperties(obj, root = ':root') {
  * and nested child objects will become flattend custom properties
  */
 function bannerProperties(obj) {
+	if (!isTrueObject(obj)) {
+		warn(
+			'bannerProperties',
+			'cannot create custom-properties from non-object',
+			obj
+		);
+		return '';
+	}
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		return all + globalProperties(val, `.${key}`);
 	}, '');
 }
 
-// SCSS VARIABLES //
+// SCSS VARIABLES /////////////////////////////////////
 
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased sass variable
  * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
  */
 function sassVariable(obj, prefix = '$') {
+	if (!isTrueObject(obj)) {
+		warn('sassVariable', 'cannot create styles from non-object', obj);
+		return '';
+	}
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		let attr = `${prefix}${key}`;
 
-		if (!!val && typeof val === 'object' && !Array.isArray(val)) {
+		if (isTrueObject(val)) {
 			return all + `${sassVariable(val, `${attr}-`)}`;
 		}
-
 		return all + `${attr}: ${Array.isArray(val) ? `(${val})` : val};\n`;
 	}, '');
 }
 
 function jsonToStyles(obj, space = '\t') {
-	if (!obj) {
+	if (typeof obj === 'undefined') {
+		warn('jsonToStyles', 'cannot create styles from `undefined`', obj);
 		return '';
+	}
+	if (!isTrueObject(obj)) {
+		warn(
+			'jsonToStyles',
+			'did you really mean to strigify a non-object?',
+			obj
+		);
+		return `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
 	}
 	return JSON.stringify(obj, null, space)
 		.replace(/"([^"]+)"/g, '$1')
@@ -99,6 +140,10 @@ function jsonToStyles(obj, space = '\t') {
  * @param {*} prefix leading string on selector name; defaults to "." for className.
  */
 function styleBlock(obj, prefix = '.', join = '-') {
+	if (!isTrueObject(obj)) {
+		warn('styleBlock', 'cannot create styles from non-object', obj);
+		return '';
+	}
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		let selector = `${prefix}${key}`;
 
@@ -113,20 +158,15 @@ function styleBlock(obj, prefix = '.', join = '-') {
 	}, '');
 }
 
-// TYPESCRIPT TYPES //
+// TYPESCRIPT TYPES ///////////////////////////////////
 
 function createUnion(arr) {
 	if (!Array.isArray(arr)) {
-		console.warn('cannot create union from non-Arrays');
-		return;
+		warn('createUnion', 'cannot create union from non-Arrays', arr);
+		return '';
 	}
 	return arr
-		.map((item) => {
-			if (typeof item === 'string') {
-				return `'${item}'`;
-			}
-			return item;
-		})
+		.map((item) => (typeof item === 'string' ? `'${item}'` : item))
 		.join(' | ');
 }
 
@@ -158,6 +198,7 @@ module.exports = {
 	customProperties,
 	globalProperties,
 	sassVariable,
+	successMessage,
 	styleBlock,
 	unionType,
 };

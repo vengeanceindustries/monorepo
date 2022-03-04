@@ -4,11 +4,11 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"ignore-main": "index.html",
-	"main": "utils/generator.js",
+	"main": "utils/generator.write.js",
 	"scripts": {
 		"start": "parcel index.html --open",
 		"build": "parcel build index.html",
-		"generate": "node utils/generator.js"
+		"generate": "node utils/generator.write.js"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

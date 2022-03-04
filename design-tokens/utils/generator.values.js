@@ -1,5 +1,3 @@
-const fs = require('fs-extra');
-
 const tokens = require('../src/tokens.json');
 const tokensFL = require('../src/tokens.FL.json');
 const tokensKFL = require('../src/tokens.KFL.json');
@@ -10,10 +8,6 @@ const {
 	styleBlock,
 } = require('./jsonToScss');
 const { unionType } = require('./jsonToTs');
-
-const writefile = (filename, data) => {
-	return fs.writeFileSync(filename, data);
-};
 
 const { name: fontNames, ...font } = tokens.font;
 const namedFonts = Object.keys(fontNames);
@@ -31,7 +25,6 @@ ${unionType({ font }, 'Global')}
 // FONT NAMES
 ${unionType({ fontName: namedFonts }, 'Global')}
 `;
-writefile('dist/index.d.ts', types);
 
 // SCSS //
 const fontPlaceholders = styleBlock({ font: fontNames }, '%', '-');
@@ -61,7 +54,7 @@ ${styleBlock({ Theme: tokensFL.theme }, '.', '--')}
 `;
 
 const scss = `
-// SCSS COLORS
+// SCSS COLOR VALUES
 ${sassVariable(tokens.color)}
 // SCSS FONTS
 ${sassVariable({ font })}
@@ -80,4 +73,7 @@ ${bannerProperties({ FL: tokensFL, KFL: tokensKFL })}
 ${styleBlock({ Button: tokens.button }, '.', '--')}
 `;
 
-writefile('dist/index.scss', scss);
+module.exports = {
+	scss,
+	types,
+};

@@ -19,8 +19,11 @@ const banner = bannerProperties({ FL: tokensFL });
 
 const font = sassVariable({ font: tokens.font });
 const fontTypes = unionType({ font: tokens.font }, 'Global');
-const button = styleBlock({ Button: tokens['button-variables'] }, '.', '--');
-const bannerPlaceholders = styleBlock({ button: tokensFL.button }, '%');
+const button = styleBlock({ Button: tokens.button }, '.', '--');
+const bannerPlaceholders = styleBlock(
+	{ button: tokensFL.theme.light.button },
+	'%'
+);
 // const bannerPlaceholders = styleBlock({ FL: { button: tokensFL.button } }, "%");
 // console.log(tokens.banner);
 

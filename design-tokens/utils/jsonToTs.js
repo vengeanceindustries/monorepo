@@ -1,4 +1,9 @@
-const { camelize, hasChildObjects, isTrueObject } = require('./jsonUtils');
+const {
+	camelize,
+	hasChildObjects,
+	isArray,
+	isTrueObject,
+} = require('./jsonUtils');
 
 function createUnion(arr) {
 	if (!Array.isArray(arr)) {
@@ -21,14 +26,19 @@ function createUnion(arr) {
  * export type GlobalFontSize = 'heading-1' | 'heading-2';
  */
 function unionType(obj, prefix = '') {
+	if (isArray(obj) && prefix) {
+		return `export type ${prefix} = ${createUnion(obj)};\n`;
+	}
+
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		let typeName = `${prefix}${camelize(key, { titleCase: true })}`;
+		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
 
 		if (isTrueObject(val) && hasChildObjects(val)) {
 			return all + `${unionType(val, `${typeName}`)}`;
 		}
 
-		const arr = Object.keys(val);
+		const arr = isArray(val) ? val : Object.keys(val);
+
 		return all + `export type ${typeName} = ${createUnion(arr)};\n`;
 	}, '');
 }

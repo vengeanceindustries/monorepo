@@ -1,6 +1,10 @@
 function isTrueObject(obj) {
 	return obj && typeof obj === 'object' && !Array.isArray(obj);
 }
+function isArray(obj) {
+	return obj && Array.isArray(obj);
+	// return obj && typeof obj === 'object' && Array.isArray(obj);
+}
 
 function hasChildObjects(obj) {
 	if (!isTrueObject(obj)) {
@@ -40,6 +44,7 @@ function titleCase(str) {
 module.exports = {
 	camelize,
 	hasChildObjects,
+	isArray,
 	isTrueObject,
 	titleCase,
 };

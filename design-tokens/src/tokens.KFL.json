@@ -1,10 +1,11 @@
 {
-	"name": "Foot Locker",
+	"site": "KFL",
+	"name": "Kids Foot Locker",
 	"brand": {
-		"primary": "$my_crimson",
-		"secondary": "$woodsmoke",
-		"highlight": "$my_crimson",
-		"black": "$woodsmoke",
+		"primary": "$science_blue",
+		"secondary": "$mineshaft",
+		"highlight": "$science_blue",
+		"black": "$mineshaft",
 		"grey": "$emperor"
 	},
 	"font": {
@@ -12,18 +13,6 @@
 			"heading": "$font-family-Poppins"
 		},
 		"import": ["Roboto", "mono", "Poppins"]
-	},
-	"button": {
-		"primary": {
-			"color": "$black",
-			"border-color": "$white",
-			"background-color": "$white"
-		},
-		"secondary": {
-			"color": "$white",
-			"border-color": "$white",
-			"background-color": "$black"
-		}
 	},
 	"theme": {
 		"light": {
@@ -37,6 +26,18 @@
 		"accent": {
 			"color": "$white",
 			"background-color": "$brand_primary"
+		}
+	},
+	"button": {
+		"primary": {
+			"color": "$black",
+			"border-color": "$white",
+			"background-color": "$white"
+		},
+		"secondary": {
+			"color": "$white",
+			"border-color": "$white",
+			"background-color": "$black"
 		}
 	}
 }

@@ -5,7 +5,7 @@ const tokensFL = require('../src/tokens.FL.json');
 const tokensKFL = require('../src/tokens.KFL.json');
 const {
 	bannerProperties,
-	customProperties,
+	globalProperties,
 	sassVariable,
 	styleBlock,
 } = require('./jsonToScss');
@@ -15,52 +15,69 @@ const writefile = (filename, data) => {
 	return fs.writeFileSync(filename, data);
 };
 
-// banners
-const color = sassVariable(tokens.color);
-const colorTypes = unionType({ color: tokens.color }, 'Global');
+const { name: fontNames, ...font } = tokens.font;
+const namedFonts = Object.keys(fontNames);
+
+// TYPES //
 // const allBanners = customProperties({ FL: tokensFL });
 // const bannerTypes = unionType({ banner: tokensFL }, 'Type');
 // let bannerTypes = unionType({ color: tokensFL.brand }, 'TypeBrand');
 // bannerTypes += unionType(tokensFL.theme, 'TypeTheme');
-
-const font = sassVariable({ font: tokens.font });
-const fontTypes = unionType({ font: tokens.font }, 'Global');
-const button = styleBlock({ Button: tokens['button-variables'] }, '.', '--');
-
-const banner = bannerProperties({ FL: tokensFL, KFL: tokensKFL });
-const bannerPlaceholders = styleBlock({ button: tokensFL.button }, '%');
-// const bannerPlaceholders = styleBlock({ FL: { button: tokensFL.button } }, "%");
-
-const ts = `
+const types = `
 // COLOR TYPES
-${colorTypes}
+${unionType({ color: tokens.color }, 'Global')}
 // FONT TYPES
-${fontTypes}
+${unionType({ font }, 'Global')}
+// FONT NAMES
+${unionType({ fontName: namedFonts }, 'Global')}
 `;
+writefile('dist/index.d.ts', types);
 
-const typography = `
-// typography.scss //
-h1,
-.font-heading-1 {
-  font: #{$font-size-heading-1}/#{$font-line-height-heading} #{$font-weight-bold} var(--font-family-heading);
+// SCSS //
+const fontPlaceholders = styleBlock({ font: fontNames }, '%', '-');
+const typography = `// typography.scss //
+h1, .font-heading-1 {
+	@extend %font-heading-1;
 }
-h2,
-.font-heading-2 {
-  font: #{$font-size-heading-2}/#{$font-line-height-heading} #{$font-weight-bold} var(--font-family-heading);
+h2, .font-heading-2 {
+	@extend %font-heading-2;
 }
+h3, .font-heading-3 {
+	@extend %font-heading-3;
+}
+`;
+// const bannerPlaceholders = styleBlock({ button: tokensFL.button }, '%');
+// const bannerPlaceholders = styleBlock({ FL: { button: tokensFL.button } }, "%");
+/*
+.Theme--light {
+	color: var(--theme-light-color);
+	background-color: var(--theme-light-background-color)
+}
+ */
+
+const styles = `
+// Theme style blocks 
+${styleBlock({ Theme: tokensFL.theme }, '.', '--')}
 `;
 
 const scss = `
 // SCSS COLORS
-${color}
+${sassVariable(tokens.color)}
 // SCSS FONTS
-${font}
+${sassVariable({ font })}
+// FontName style blocks
+${fontPlaceholders}
 ${typography}
+// BANNER FONTS
+${globalProperties({
+	font: { family: { heading: font.family.heading } },
+	button: tokensFL.button,
+	theme: tokensFL.theme,
+})}
 // BANNER CSS VARS
-${banner}
+${bannerProperties({ FL: tokensFL, KFL: tokensKFL })}
 // Button style blocks
-${button}
+${styleBlock({ Button: tokens.button }, '.', '--')}
 `;
 
 writefile('dist/index.scss', scss);
-writefile('dist/index.d.ts', ts);

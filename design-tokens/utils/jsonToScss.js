@@ -20,8 +20,16 @@ function sassVariable(obj, prefix = '$') {
  * @param {object} obj nested object whose keys will be flattened to a snake-cased custom property (aka CSS variable)
  * @param {string} prefix leading string on variable name; defaults to "--" for custom properties
  */
-function customProperties(obj, prefix = '--') {
-	return sassVariable(obj, prefix);
+function customProperties(obj, prefix = '') {
+	return sassVariable(obj, `${prefix}--`);
+}
+
+/**
+ * @param {object} obj nested object whose keys will be flattened to a snake-cased custom property (aka CSS variable)
+ * @param {string} root "selector" name of context for properties, defaults to document :root
+ */
+function globalProperties(obj, root = ':root') {
+	return `${root} {\r${customProperties(obj, `\t`)}};\r\n`;
 }
 
 /**
@@ -30,14 +38,29 @@ function customProperties(obj, prefix = '--') {
  */
 function bannerProperties(obj) {
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		return all + `.${key} {\r${customProperties(val, `  --`)}}\r\n`;
+		return all + globalProperties(val, `.${key}`);
 	}, '');
 }
 
-function jsonToStyles(obj, space = 2) {
+function jsonToStyles(obj, space = '\t') {
+	if (!obj) {
+		return '';
+	}
 	return JSON.stringify(obj, null, space)
 		.replace(/"([^"]+)"/g, '$1')
 		.replace(/,/g, ';');
+}
+
+function getCssChild(obj) {
+	if (!isTrueObject(obj)) {
+		return null;
+	}
+	// acceptable key names for css child:
+	return obj.css || obj.CSS;
+}
+
+function getChildObject(obj) {
+	return hasChildObjects(obj) ? Object.values(obj) : null;
 }
 
 /**
@@ -48,17 +71,21 @@ function styleBlock(obj, prefix = '.', join = '-') {
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		let selector = `${prefix}${key}`;
 
-		if (isTrueObject(val) && hasChildObjects(val)) {
+		if (hasChildObjects(val)) {
 			return all + `${styleBlock(val, `${selector}${join}`)}`;
 		}
-
-		return all + `${selector} ${jsonToStyles(val)}\r\n`;
+		const styles = jsonToStyles(val);
+		if (!styles) {
+			return all;
+		}
+		return all + `${selector} ${styles}\r\n`;
 	}, '');
 }
 
 module.exports = {
 	bannerProperties,
 	customProperties,
+	globalProperties,
 	sassVariable,
 	styleBlock,
 };

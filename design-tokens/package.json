@@ -4,7 +4,7 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"ignore-main": "index.html",
-	"main": "generator.js",
+	"main": "utils/generator.js",
 	"scripts": {
 		"start": "parcel index.html --open",
 		"build": "parcel build index.html",

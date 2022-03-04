@@ -6,8 +6,8 @@ const {
 	globalProperties,
 	sassVariable,
 	styleBlock,
-} = require('./jsonToScss');
-const { unionType } = require('./jsonToTs');
+	unionType,
+} = require('./jsonToCssScssTs');
 
 const { name: fontNames, ...font } = tokens.font;
 const namedFonts = Object.keys(fontNames);

@@ -1,6 +1,6 @@
-const tokens = require('../src/tokens.json');
-const tokensFL = require('../src/tokens.FL.json');
-const tokensKFL = require('../src/tokens.KFL.json');
+const tokens = require('../src/tokens/tokens.gen.json');
+const tokensFL = require('../src/tokens/tokens.FL.json');
+const tokensKFL = require('../src/tokens/tokens.KFL.json');
 const {
 	bannerProperties,
 	globalProperties,

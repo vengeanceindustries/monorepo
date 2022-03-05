@@ -1,0 +1,24 @@
+{
+	"name": "design-tokens",
+	"description": "utils to consume JSON design token data and generate SCSS vars, CSS vars, and TS types",
+	"version": "1.0.0",
+	"license": "MIT",
+	"ignore-main": "index.html",
+	"main": "utils/generator.write.js",
+	"scripts": {
+		"start": "parcel index.html --open",
+		"build": "parcel build index.html",
+		"generate": "node utils/generator.write.js"
+	},
+	"dependencies": {
+		"cross-env": "5.0.5",
+		"parcel-bundler": "^1.6.1"
+	},
+	"devDependencies": {
+		"fs-extra": "^5.0.0",
+		"typescript": "^4.5.5"
+	},
+	"resolutions": {
+		"@babel/preset-env": "7.13.8"
+	}
+}

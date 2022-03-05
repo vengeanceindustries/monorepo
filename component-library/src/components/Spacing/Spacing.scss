@@ -1,0 +1,23 @@
+$spacingBase: 0.5rem;
+
+$properties: ('bottom', 'left', 'right', 'top');
+
+$spacingSizes: (0, 1, 2, 3, 4, 5, 6);
+
+// .margin {
+// 	@each ($property in $properties) {
+// 		@each ($size in $spacingSizes) {
+// 			&#{capitalize($property)} {
+// 				margin-#{$property}: #{$size * $spacingBase};
+// 			}
+// 		}
+// 	}
+// }
+.marginBottom {
+	&\:1 {
+		margin-bottom: #{1 * $spacingBase};
+	}
+	&\:2 {
+		margin-bottom: #{2 * $spacingBase};
+	}
+}

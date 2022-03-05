@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"design-tokens": ["../design-tokens/"],
+			"component-library": ["../component-library/"],
+			"UI-LIB": ["../component-library/"]
+		},
+		"allowJs": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"jsx": "react",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"noFallthroughCasesInSwitch": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": false,
+		"target": "es5"
+	}
+}

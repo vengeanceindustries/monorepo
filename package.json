@@ -1,14 +1,8 @@
 {
-	"private": true,
-	"workspaces": [
-		"component-library",
-		"design-tokens",
-		"frontend"
-	],
-	"prettier": {
-		"trailingComma": "es5",
-		"singleQuote": true,
-		"tabWidth": 4,
-		"useTabs": true
-	}
+  "private": true,
+  "workspaces": [
+    "component-library",
+    "design-tokens",
+    "frontend"
+  ]
 }

@@ -1,4 +1,4 @@
-const tokens = require('../src/tokens/tokens.gen.json');
+const tokens = require('../src/tokens/tokens.global.json');
 const tokensFL = require('../src/tokens/tokens.FL.json');
 const tokensKFL = require('../src/tokens/tokens.KFL.json');
 const {
@@ -29,6 +29,9 @@ ${unionType({ fontName: namedFonts }, 'Global')}
 // SCSS //
 const fontPlaceholders = styleBlock({ font: fontNames }, '%', '-');
 const typography = `// typography.scss //
+body, .font-body-2 {
+	@extend %font-body-2;
+}
 h1, .font-heading-1 {
 	@extend %font-heading-1;
 }

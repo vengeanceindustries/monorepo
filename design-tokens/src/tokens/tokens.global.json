@@ -39,13 +39,7 @@
 		"family": {
 			"body": "'Roboto', Arial, sans-serif",
 			"heading": "'Roboto', Arial, sans-serif",
-			"mono": "'Roboto Mono', monospace",
-
-			"Oswald": "'Oswald', Arial, sans-serif",
-			"Poppins": "'Poppins', Arial, sans-serif",
-			"Roboto": "'Roboto', Arial, sans-serif",
-			"RobotoCondensed": "'Roboto Condensed', 'Roboto', Arial, sans-serif",
-			"RobotoMono": "'Roboto Mono', monospace"
+			"mono": "'Roboto Mono', monospace"
 		},
 		"size": {
 			"heading-1": "3rem",
@@ -60,11 +54,9 @@
 			"tiny": "0.625rem"
 		},
 		"weight": {
-			"light": 200,
-			"normal": 400,
-			"medium": 400,
-			"bold": 600,
-			"black": 800
+			"light": 300,
+			"medium": 500,
+			"bold": 700
 		},
 		"lineHeight": {
 			"paragraph": 1.5,

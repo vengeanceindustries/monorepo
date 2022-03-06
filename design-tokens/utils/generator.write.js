@@ -1,8 +1,25 @@
 const fs = require('fs-extra');
-const { scss, types } = require('./generator.values');
 const { successMessage } = require('./jsonToCssScssTs');
 
+const { scss, types } = require('./generator.values');
 fs.writeFileSync('dist/index.d.ts', types);
 fs.writeFileSync('dist/index.scss', scss);
 
-successMessage('types and styles written to file! 📝');
+const icons = require('./generator.icons');
+fs.writeFile('dist/sprite.svg', icons);
+
+// const getIcons = require('./generator.icons');
+
+// async function writeAll() {
+// 	const icons = await getIcons();
+// 	console.log('generatedIcons:', icons);
+// 	fs.writeFile('dist/sprite.svg', icons);
+
+// 	// require('./generator.icons').then((icons) => {
+// 	// 	console.log('generatedIcons:', icons);
+// 	// 	fs.writeFile('dist/sprite.svg', icons);
+// 	// });
+
+// 	successMessage('types and styles written to file! 📝');
+// }
+// writeAll();

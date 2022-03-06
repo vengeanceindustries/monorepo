@@ -200,5 +200,6 @@ module.exports = {
 	sassVariable,
 	successMessage,
 	styleBlock,
+	createUnion,
 	unionType,
 };

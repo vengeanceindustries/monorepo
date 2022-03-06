@@ -1,20 +1,17 @@
 {
 	"site": "FL",
 	"name": "Foot Locker",
+	"brand": {
+		"primary": "$my_crimson",
+		"secondary": "$woodsmoke",
+		"highlight": "$my_crimson"
+	},
 	"font": {
 		"family": {
 			"base": "Roboto",
 			"heading": "Roboto",
 			"mono": "RobotoMono"
 		}
-	},
-	"brand": {
-		"primary": "$my_crimson",
-		"secondary": "$woodsmoke",
-		"highlight": "$my_crimson",
-		"black": "$woodsmoke",
-		"grey": "$emperor",
-		"white": "$white"
 	},
 	"theme": {
 		"light": {

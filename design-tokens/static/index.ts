@@ -1,15 +1,21 @@
-import { fontImports, scss, types } from '../utils/generator.values';
+import { scss, types } from '../utils/generator.values';
+import allFontImports from '../utils/generator.fontImports';
 
-const head = document.getElementsByTagName('head')[0];
+const BANNER = 'FL';
+
+// add stylesheet links
+if (allFontImports?.[BANNER]) {
+	const head = document.getElementsByTagName('head')[0];
+	const fontsDiv = document.createElement('div');
+	fontsDiv.innerHTML = allFontImports[BANNER];
+	var arr = Array.prototype.slice.call(fontsDiv.childNodes);
+	arr.forEach((node) => {
+		head.appendChild(node);
+	});
+}
+
+// add output for sanity-check
 const app = document.getElementById('app');
-
-const fontsDiv = document.createElement('div');
-fontsDiv.innerHTML = fontImports;
-var arr = Array.prototype.slice.call(fontsDiv.childNodes);
-arr.forEach((node) => {
-	head.appendChild(node);
-});
-
 app.innerHTML = `
 <h1>Design Tokens</h1>
 <pre>${scss}${types}</pre>`;

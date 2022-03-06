@@ -20,6 +20,6 @@ fs.writeFile('dist/sprite.svg', icons);
 // 	// 	fs.writeFile('dist/sprite.svg', icons);
 // 	// });
 
-// 	successMessage('types and styles written to file! 📝');
 // }
 // writeAll();
+successMessage('types and styles written to file! 📝');

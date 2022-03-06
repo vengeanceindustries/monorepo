@@ -35,11 +35,20 @@
 		"mineshaft": "#383838",
 		"my_crimson": "#e71836"
 	},
+	"fontImports": {
+		"Oswald": "Oswald:wght@700",
+		"Poppins": "Poppins:wght@700",
+		"Roboto": "Roboto:wght@300;500;700",
+		"RobotoCondensed": "Roboto+Condensed:wght@700",
+		"RobotoMono": "Roboto+Mono:wght@400"
+	},
 	"font": {
 		"family": {
-			"body": "'Roboto', Arial, sans-serif",
-			"heading": "'Roboto', Arial, sans-serif",
-			"mono": "'Roboto Mono', monospace"
+			"Oswald": "'Oswald', Arial, sans-serif",
+			"Poppins": "'Poppins', Arial, sans-serif",
+			"Roboto": "'Roboto', Arial, sans-serif",
+			"RobotoCondensed": "'Roboto Condensed', 'Roboto', Arial, sans-serif",
+			"RobotoMono": "'Roboto Mono', monospace"
 		},
 		"size": {
 			"heading-1": "3rem",

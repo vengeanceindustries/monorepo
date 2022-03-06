@@ -10,14 +10,29 @@
 	},
 	"font": {
 		"family": {
-			"heading": "$font-family-Poppins"
-		},
-		"import": ["Roboto", "mono", "Poppins"]
+			"base": "Roboto",
+			"heading": "Poppins",
+			"mono": "RobotoMono"
+		}
 	},
 	"theme": {
 		"light": {
-			"color": "$black",
-			"background-color": "$white"
+			"css": {
+				"color": "$black",
+				"background-color": "$white"
+			},
+			"button": {
+				"primary": {
+					"color": "$black",
+					"border-color": "$white",
+					"background-color": "$white"
+				},
+				"secondary": {
+					"color": "$white",
+					"border-color": "$white",
+					"background-color": "$black"
+				}
+			}
 		},
 		"dark": {
 			"color": "$white",
@@ -26,18 +41,6 @@
 		"accent": {
 			"color": "$white",
 			"background-color": "$brand_primary"
-		}
-	},
-	"button": {
-		"primary": {
-			"color": "$black",
-			"border-color": "$white",
-			"background-color": "$white"
-		},
-		"secondary": {
-			"color": "$white",
-			"border-color": "$white",
-			"background-color": "$black"
 		}
 	}
 }

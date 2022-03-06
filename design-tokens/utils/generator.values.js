@@ -9,6 +9,25 @@ const {
 	unionType,
 } = require('./jsonToCssScssTs');
 
+function generateFontLink(families) {
+	const fam = families.join('&');
+	return (
+		'<link rel="preconnect" href="https://fonts.googleapis.com" />' +
+		'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />' +
+		`<link href="https://fonts.googleapis.com/css2?family=${fam}&display=swap" rel="stylesheet" />`
+	);
+}
+
+const { fontImports } = tokens;
+
+// TO DO: generate for each banner
+const FL = tokensFL.font.family;
+const fontImportsFL = [
+	fontImports[FL.base],
+	fontImports[FL.heading],
+	fontImports[FL.mono],
+];
+
 const { name: fontNames, ...font } = tokens.font;
 const namedFonts = Object.keys(fontNames);
 
@@ -21,9 +40,10 @@ const types = `
 // COLOR TYPES
 ${unionType({ color: tokens.color }, 'Global')}
 // FONT TYPES
+${unionType({ fontType: tokensFL.font.family }, 'Global')}
 ${unionType({ font }, 'Global')}
 // FONT NAMES
-${unionType({ fontName: namedFonts }, 'Global')}
+${unionType({ fontStyle: namedFonts }, 'Global')}
 `;
 
 // SCSS //
@@ -67,7 +87,7 @@ ${typography}
 // BANNER FONTS
 ${globalProperties({
 	font: { family: { heading: font.family.heading } },
-	button: tokensFL.button,
+	button: tokensFL.theme.light.button,
 	theme: tokensFL.theme,
 })}
 // BANNER CSS VARS
@@ -79,4 +99,5 @@ ${styleBlock({ Button: tokens.button }, '.', '--')}
 module.exports = {
 	scss,
 	types,
+	fontImports: generateFontLink(fontImportsFL),
 };

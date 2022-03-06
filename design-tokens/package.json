@@ -7,8 +7,9 @@
 	"main": "utils/generator.write.js",
 	"scripts": {
 		"start": "parcel index.html --open",
-		"build": "parcel build index.html",
-		"generate": "node utils/generator.write.js"
+		"build-index": "parcel build index.html",
+		"build": "node utils/generator.write.js",
+		"generate": "yarn run build"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

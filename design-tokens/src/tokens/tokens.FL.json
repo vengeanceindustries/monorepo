@@ -1,10 +1,12 @@
 {
 	"site": "FL",
 	"name": "Foot Locker",
-	"brand": {
-		"primary": "$my_crimson",
-		"secondary": "$woodsmoke",
-		"highlight": "$my_crimson"
+	"color": {
+		"brand": {
+			"primary": "$my_crimson",
+			"secondary": "$woodsmoke",
+			"highlight": "$my_crimson"
+		}
 	},
 	"font": {
 		"family": {

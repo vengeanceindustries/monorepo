@@ -10,10 +10,7 @@ const {
 	unionType,
 } = require('./jsonToCssScssTs');
 
-const { fontImports } = tokens;
-
-const { name: fontNames, ...font } = tokens.font;
-const namedFonts = Object.keys(fontNames);
+const { imports: fontImports, style: fontStyles, ...font } = tokens.font;
 
 // TYPES //
 // const allBanners = customProperties({ FL });
@@ -29,11 +26,11 @@ ${unionType({ color: tokens.color }, 'Global')}
 ${unionType({ fontType: FL.font.family }, 'Global')}
 ${unionType({ font }, 'Global')}
 // FONT NAMES
-${unionType({ fontStyle: namedFonts }, 'Global')}
+${unionType({ fontStyle: Object.keys(fontStyles) }, 'Global')}
 `;
 
 // SCSS //
-const fontPlaceholders = styleBlock({ font: fontNames }, '%', '-');
+const fontPlaceholders = styleBlock({ font: fontStyles }, '%', '-');
 const typography = `// typography.scss //
 body, .font-body-2 {
 	@extend %font-body-2;
@@ -72,7 +69,8 @@ ${fontPlaceholders}
 ${typography}
 // BANNER FONTS
 ${globalProperties({
-	font: { family: { heading: font.family.heading } },
+	// font: { family: font.family },
+	// font: FL.font,
 	button: FL.theme.light.button,
 	theme: FL.theme,
 })}

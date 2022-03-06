@@ -3,12 +3,11 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"scripts": {
-		"build": "react-scripts build",
-		"start": "react-scripts start",
+		"build": "build-storybook -s public",
+		"prebuild": "../design-tokens/utils/generator.write.js",
+		"start": "start-storybook -p 6006 -s public",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"storybook": "start-storybook -p 6006 -s public",
-		"build-storybook": "build-storybook -s public"
+		"eject": "react-scripts eject"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

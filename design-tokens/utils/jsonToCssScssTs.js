@@ -56,10 +56,29 @@ function titleCase(str) {
 	return camelize(str, { titleCase: true });
 }
 
+/**
+ * @param {object} obj nested object whose keys will be flattened to a css-style variable
+ * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
+ */
+function flattenToVariable(obj, prefix = '$') {
+	if (!isTrueObject(obj)) {
+		warn('flattenToVariable', 'cannot create styles from non-object', obj);
+		return '';
+	}
+	return Object.entries(obj).reduce((all, [key, val]) => {
+		let attr = `${prefix}${key}`;
+
+		if (isTrueObject(val)) {
+			return all + `${flattenToVariable(val, `${attr}-`)}`;
+		}
+		return all + `${attr}: ${Array.isArray(val) ? `(${val})` : val};\n`;
+	}, '');
+}
+
 // CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
 
 function customProperties(obj, prefix = '') {
-	return sassVariable(obj, `${prefix}--`);
+	return flattenToVariable(obj, `${prefix}--`);
 }
 
 /**
@@ -100,21 +119,9 @@ function bannerProperties(obj) {
 
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased sass variable
- * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
  */
-function sassVariable(obj, prefix = '$') {
-	if (!isTrueObject(obj)) {
-		warn('sassVariable', 'cannot create styles from non-object', obj);
-		return '';
-	}
-	return Object.entries(obj).reduce((all, [key, val]) => {
-		let attr = `${prefix}${key}`;
-
-		if (isTrueObject(val)) {
-			return all + `${sassVariable(val, `${attr}-`)}`;
-		}
-		return all + `${attr}: ${Array.isArray(val) ? `(${val})` : val};\n`;
-	}, '');
+function sassVariable(obj) {
+	return flattenToVariable(obj, (prefix = '$'));
 }
 
 function jsonToStyles(obj, space = '\t') {

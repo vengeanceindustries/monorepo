@@ -191,6 +191,12 @@ function unionType(obj, prefix = '') {
 		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
 
 		if (isTrueObject(val) && hasChildObjects(val)) {
+			console.log(key, 'Object.keys(val)', Object.keys(val));
+
+			all += `export type ${typeName} = ${createUnion(
+				isArray(val) ? val : Object.keys(val)
+			)};\n`;
+
 			return all + `${unionType(val, `${typeName}`)}`;
 		}
 

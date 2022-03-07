@@ -18,4 +18,8 @@ if (allFontImports?.[BANNER]) {
 const app = document.getElementById('app');
 app.innerHTML = `
 <h1>Design Tokens</h1>
-<pre>${scss}${types}</pre>`;
+<svg viewBox="0 0 24 24" height="24" width="24">
+	<use xlink:href="#bookmark"></use>
+</svg>
+<pre>${scss}${types}</pre>
+`;

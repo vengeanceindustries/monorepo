@@ -17,12 +17,14 @@
 			"width": 1200
 		}
 	},
-	"contentWidth": {
-		"xsmall": 320,
-		"small": 640,
-		"medium": 960,
-		"large": 1300,
-		"xlarge": 1680
+	"content": {
+		"width": {
+			"xsmall": 320,
+			"small": 640,
+			"medium": 960,
+			"large": 1300,
+			"xlarge": 1680
+		}
 	},
 	"color": {
 		"red": "#f00",

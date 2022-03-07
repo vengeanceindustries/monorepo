@@ -12,14 +12,22 @@ const {
 
 const { imports: fontImports, style: fontStyles, ...font } = tokens.font;
 
-// TYPES //
-// const allBanners = customProperties({ FL });
-// const bannerTypes = unionType({ banner: FL }, 'Type');
-// let bannerTypes = unionType({ color: FL.brand }, 'TypeBrand');
-// bannerTypes += unionType(FL.theme, 'TypeTheme');
+const breakpoints = { device: {}, size: {} };
+const breakpointEntries = Object.entries(tokens.breakpoints);
+
+breakpointEntries.forEach(([id, { name, width }]) => {
+	breakpoints.size[id] = width;
+	breakpoints.device[name] = `${width / 16}em`;
+});
+
 const types = `
+${unionType(tokens, 'Global')}
 // BANNERS
 ${unionType(Object.keys(allBannerTokens), 'SiteName')}
+// BREAKPOINTS
+${unionType(breakpoints, 'Breakpoint')}
+// CONTENT WIDTHS
+${unionType(tokens.content, 'Content')}
 // COLOR TYPES
 ${unionType({ color: tokens.color }, 'Global')}
 // FONT TYPES
@@ -60,6 +68,10 @@ ${styleBlock({ Theme: FL.theme }, '.', '--')}
 `;
 
 const scss = `
+// BREAKPOINTS
+${sassVariable({ breakpoint: breakpoints })}
+// CONTENT WIDTHS
+${sassVariable({ content: tokens.content })}
 // SCSS COLOR VALUES
 ${sassVariable(tokens.color)}
 // SCSS FONTS

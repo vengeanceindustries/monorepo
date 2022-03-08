@@ -14,10 +14,13 @@ $spacingSizes: (0, 1, 2, 3, 4, 5, 6);
 // 	}
 // }
 .marginBottom {
-	&\:1 {
+	&-1 {
 		margin-bottom: #{1 * $spacingBase};
 	}
-	&\:2 {
+	&-2 {
+		margin-bottom: #{2 * $spacingBase};
+	}
+	&-3 {
 		margin-bottom: #{2 * $spacingBase};
 	}
 }

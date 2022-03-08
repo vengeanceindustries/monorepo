@@ -43,7 +43,7 @@ const svgo = () =>
 		],
 	});
 
-const sourcePath = './src/icons/';
+const sourcePath = path.resolve(__dirname, './src/icons/');
 
 const icons = fs.existsSync(sourcePath)
 	? fs

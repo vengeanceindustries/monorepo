@@ -1,7 +1,3 @@
-const tokens = require('../src/tokens/tokens.global.json');
-const FL = require('../src/tokens/tokens.FL.json');
-const KFL = require('../src/tokens/tokens.KFL.json');
-const allBannerTokens = { FL, KFL };
 const {
 	bannerProperties,
 	globalProperties,
@@ -9,6 +5,12 @@ const {
 	styleBlock,
 	unionType,
 } = require('./jsonToCssScssTs');
+// GLOBAL TOKENS //
+const tokens = require('../src/tokens/tokens.global.json');
+// BANNER TOKENS //
+const FL = require('../src/tokens/tokens.FL.json');
+const KFL = require('../src/tokens/tokens.KFL.json');
+const allBannerTokens = { FL, KFL };
 
 const { imports: fontImports, style: fontStyles, ...font } = tokens.font;
 

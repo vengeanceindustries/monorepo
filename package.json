@@ -1,8 +1,11 @@
 {
-  "private": true,
-  "workspaces": [
-    "component-library",
-    "design-tokens",
-    "frontend"
-  ]
+	"private": true,
+	"workspaces": [
+		"component-library",
+		"design-tokens",
+		"frontend"
+	],
+	"scripts": {
+		"generate": "node ./design-tokens/utils/generator.write.js"
+	}
 }

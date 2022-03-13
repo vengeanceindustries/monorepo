@@ -56,21 +56,27 @@ function titleCase(str) {
 	return camelize(str, { titleCase: true });
 }
 
+const transformDefault = (key, val) => [key, val];
+
 /**
  * @param {object} obj nested object whose keys will be flattened to a css-style variable
  * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
+ * @param {function} transform allows transformation of key or value before looping
  */
-function flattenToVariable(obj, prefix = '$') {
+function flattenToVariable(obj, prefix = '$', transform = transformDefault) {
 	if (!isTrueObject(obj)) {
 		warn('flattenToVariable', 'cannot create styles from non-object', obj);
 		return '';
 	}
-	return Object.entries(obj).reduce((all, [key, val]) => {
+	return Object.entries(obj).reduce((all, [keyOrig, valOrig]) => {
+		[key, val] = transform(keyOrig, valOrig);
+
 		let attr = `${prefix}${key}`;
 
 		if (isTrueObject(val)) {
-			return all + `${flattenToVariable(val, `${attr}-`)}`;
+			return all + `${flattenToVariable(val, `${attr}-`, transform)}`;
 		}
+
 		return all + `${attr}: ${Array.isArray(val) ? `(${val})` : val};\n`;
 	}, '');
 }
@@ -81,17 +87,29 @@ function customProperties(obj, prefix = '') {
 	return flattenToVariable(obj, `${prefix}--`);
 }
 
+function objectValueTransform(obj, transform = (key, val) => [key, val]) {
+	if (!isTrueObject(obj)) {
+		warn('objectValueTransform', 'cannot create styles from non-object', obj);
+		return {};
+	}
+
+	return Object.entries(obj).reduce((all, [keyOrig, valOrig]) => {
+		[key, val] = transform(keyOrig, valOrig);
+
+		all[key] = isTrueObject(val)
+			? objectValueTransform(val, transform)
+			: val;
+		return all;
+	}, {});
+}
+
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased custom property (aka CSS variable)
  * @param {string} root "selector" name of context for properties, defaults to document :root
  */
 function globalProperties(obj, root = ':root') {
 	if (!isTrueObject(obj)) {
-		warn(
-			'globalProperties',
-			'cannot create custom-properties from non-object',
-			obj
-		);
+		warn('globalProperties', 'need object to create custom properties', obj);
 		return '';
 	}
 	return `${root} {\r${customProperties(obj, `\t`)}};\r\n`;
@@ -191,8 +209,6 @@ function unionType(obj, prefix = '') {
 		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
 
 		if (isTrueObject(val) && hasChildObjects(val)) {
-			console.log(key, 'Object.keys(val)', Object.keys(val));
-
 			all += `export type ${typeName} = ${createUnion(
 				isArray(val) ? val : Object.keys(val)
 			)};\n`;
@@ -200,6 +216,9 @@ function unionType(obj, prefix = '') {
 			return all + `${unionType(val, `${typeName}`)}`;
 		}
 
+		if (typeof val === 'undefined') {
+			return all;
+		}
 		const arr = isArray(val) ? val : Object.keys(val);
 
 		return all + `export type ${typeName} = ${createUnion(arr)};\n`;
@@ -210,6 +229,7 @@ module.exports = {
 	bannerProperties,
 	customProperties,
 	globalProperties,
+	objectValueTransform,
 	sassVariable,
 	successMessage,
 	styleBlock,

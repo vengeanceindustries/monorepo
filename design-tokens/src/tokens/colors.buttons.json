@@ -1,0 +1,12 @@
+{
+	"primary": {
+		"color": "var(--button-primary-color)",
+		"border-color": "var(--button-primary-border-color)",
+		"background-color": "var(--button-primary-background-color)"
+	},
+	"secondary": {
+		"color": "var(--button-secondary-color)",
+		"border-color": "var(--button-secondary-border-color)",
+		"background-color": "var(--button-secondary-background-color)"
+	}
+}

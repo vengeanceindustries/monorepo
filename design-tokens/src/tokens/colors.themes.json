@@ -1,0 +1,10 @@
+{
+	"light": {
+		"color": "var(--theme-light-color)",
+		"background-color": "var(--theme-light-background-color)"
+	},
+	"dark": {
+		"color": "var(--theme-dark-color)",
+		"background-color": "var(--theme-dark-background-color)"
+	}
+}

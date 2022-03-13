@@ -1,0 +1,9 @@
+{
+	"width": {
+		"xsmall": 320,
+		"small": 640,
+		"medium": 960,
+		"large": 1300,
+		"xlarge": 1680
+	}
+}

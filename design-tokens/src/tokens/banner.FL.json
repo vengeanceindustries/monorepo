@@ -1,19 +1,17 @@
 {
-	"site": "FL",
-	"name": "Foot Locker",
-	"color": {
-		"brand": {
-			"primary": "$my_crimson",
-			"secondary": "$woodsmoke",
-			"highlight": "$my_crimson"
-		}
+	"site": "'FL'",
+	"name": "'Foot Locker'",
+	"font-family": {
+		"base": "Roboto",
+		"heading": "Roboto",
+		"mono": "RobotoMono"
 	},
-	"font": {
-		"family": {
-			"base": "Roboto",
-			"heading": "Roboto",
-			"mono": "RobotoMono"
-		}
+	"color": {
+		"primary": "$my_crimson_is_better_than_yours",
+		"secondary": "$woodsmoke",
+		"highlight": "$my_crimson_is_better_than_yours",
+		"black": "$woodsmoke",
+		"grey": "$emperor"
 	},
 	"theme": {
 		"light": {

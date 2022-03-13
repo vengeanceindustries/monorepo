@@ -1,17 +1,15 @@
 {
-	"site": "KFL",
-	"name": "Kids Foot Locker",
-	"brand": {
+	"site": "'KFL'",
+	"name": "'Kids Foot Locker'",
+	"font-family": {
+		"base": "Roboto",
+		"heading": "Poppins",
+		"mono": "RobotoMono"
+	},
+	"color": {
 		"primary": "$science_blue",
 		"secondary": "$mineshaft",
 		"highlight": "$science_blue"
-	},
-	"font": {
-		"family": {
-			"base": "Roboto",
-			"heading": "Poppins",
-			"mono": "RobotoMono"
-		}
 	},
 	"theme": {
 		"light": {

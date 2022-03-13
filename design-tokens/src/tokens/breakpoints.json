@@ -1,0 +1,18 @@
+{
+	"xs": {
+		"name": "phone",
+		"width": 320
+	},
+	"sm": {
+		"name": "tablet-portrait",
+		"width": 600
+	},
+	"md": {
+		"name": "tablet-landscape",
+		"width": 900
+	},
+	"lg": {
+		"name": "desktop",
+		"width": 1200
+	}
+}

@@ -5,6 +5,7 @@ const {
 	sassVariable,
 	styleBlock,
 	unionType,
+	variablesMap,
 } = require('./jsonToCssScssTs');
 
 // GLOBAL TOKENS //
@@ -22,28 +23,18 @@ const allBannerTokens = { FL, KFL };
 
 const { imports: fontImports, style: fontStyles, ...font } = fonts;
 
+const fontFamily = FL['font-family'] || FL.font?.family;
+
 const globals = {
-	// ...FL, // use FL loosely as the root styles
+	// use FL for the default root styles
+	site: FL.site,
+	name: FL.name,
+	color: FL.color,
 	font: { family: font.family },
-	'font-family': FL['font-family'] || FL.font?.family,
+	'font-family': fontFamily,
 	button: FL.theme.light.button,
 	theme: FL.theme,
 };
-
-const globalsTransformed = objectValueTransform(globals, (key, val) => {
-	if (key === 'font-family') {
-		const transform = objectValueTransform(val, (k, v) => [k, `#{$font-family-${v}}`]);
-		return [key, transform];
-	}
-	return [key, val];
-});
-const bannersTransformed = objectValueTransform(allBannerTokens, (key, val) => {
-	if (key === 'font-family') {
-		const transform = objectValueTransform(val, (k, v) => [k, `var(--font-family-${v})`]);
-		return [key, transform];
-	}
-	return [key, val];
-})
 
 const breakpointSizes = { device: {}, size: {} };
 
@@ -59,65 +50,89 @@ ${unionType(breakpointSizes, 'Breakpoint')}
 ${unionType(content, 'Content')}
 // COLOR NAMES
 ${unionType({ color }, 'Global')}
-// FONT TYPES
-${unionType({ fontType: FL['font-family'] || FL.font?.family }, 'Global')}
 // FONT VALUES
 ${unionType({ font }, 'Global')}
-// FONT STYLES
-${unionType({ fontStyle: Object.keys(fontStyles) }, 'Global')}
+// FONT STYLES & NAMES
+${unionType({ fontStyle: {
+	name: Object.keys(fontStyles),
+	family: fontFamily
+} })}
 // BANNER NAMES
-${unionType(Object.keys(allBannerTokens), 'SiteName')}
-`;
+${unionType(Object.keys(allBannerTokens), 'SiteName')}`;
 
 let scss = `// auto-generated file - design system variables //\n
 // BREAKPOINTS
 ${sassVariable({ breakpoint: breakpoints })}
+${variablesMap({
+	'breakpoint-device': breakpointSizes.device,
+	'breakpoint-size': breakpointSizes.size
+})}
 // CONTENT WIDTHS
 ${sassVariable({ content })}
+${variablesMap({ 'content-width': content.width })}
 // SCSS FONTS
 ${sassVariable({ font })}
-// Font style placeholders
-${styleBlock({ font: fontStyles }, '%', '-')} ///////////
 // SCSS COLOR VALUES
 ${sassVariable(color)}
+${variablesMap({ color })}
 // GLOBAL CSS VARIABLES
-${
-	// globalProperties(globals)
-	globalProperties(globalsTransformed)
-}
+${globalProperties(globals)}
 // BANNER CSS VARS
-${
-	// bannerProperties(allBannerTokens)
-	bannerProperties(bannersTransformed)
-}`;
+${bannerProperties(allBannerTokens)}`;
+
+const typemaps = `\n
+${variablesMap({typemap: fontStyles})}\n
+// Font style mixin ////////////////////////////////////////////////
+//// Render specific type styles by searching for $name in $typemap
+//// @param {String} $name - style to find; don't add "font-" prefix
+@mixin font($name) {
+	@if map-has-key($typemap, $name) {
+		$props: map-get($typemap, $name);
+		@include styleMap($props);
+	} @else {
+		@warn 'No key "#{$name}" in map $typemap. HINT: key should not start with "font-"';
+	}
+}
+
+/// Loops though a map to render styles
+/// @param {Map} $typemap - font map to loop through
+@mixin styleMap($map) {
+	@each $key, $value in $typemap {
+		@if ($key == 'mobile') {
+			// 1) assign mobile styles if present,
+			@include mq_for_phone_only {
+				@include styleMap($value);
+			}
+		} @else {
+			// 2) nest deeper into the map,
+			@if (type-of($value) == 'map') {
+				&-#{$key} {
+					@include styleMap($value);
+				}
+			} @else {
+				// 3) render styles
+				@if ($key == 'content') {
+					content: quote($value);
+				} @else {
+					#{$key}: #{$value};
+				}
+			}
+		}
+	}
+}\n`;
 
 const buttons = `
 // Button style blocks
 ${styleBlock({ Button: button }, '.', '--')}
 `;
 
-const typography = `// Font style placeholders //\n
-${styleBlock({ font: fontStyles }, '%', '-')}
-// typography.scss //\n
-body, .font-body-2 {
-	@extend %font-body-2;
-}
-h1, .font-heading-1 {
-	@extend %font-heading-1;
-}
-h2, .font-heading-2 {
-	@extend %font-heading-2;
-}
-h3, .font-heading-3 {
-	@extend %font-heading-3;
-}\n`;
-
 const themeStyles = `
 // Theme style blocks 
 ${styleBlock({ Theme: themes }, '.', '--')}
 `;
 
-scss += `// STYLE BLOCKS - TEMPORARY //\n` + buttons + themeStyles + typography;
+// scss += `\n// STYLE BLOCKS - TEMPORARY //\n` + buttons + themeStyles;
+scss += `\n// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 
 module.exports = {
 	scss,

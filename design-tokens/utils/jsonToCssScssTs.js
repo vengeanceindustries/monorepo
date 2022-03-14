@@ -81,10 +81,38 @@ function flattenToVariable(obj, prefix = '$', transform = transformDefault) {
 	}, '');
 }
 
-// CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
+function transformObj(items = {}, config = {}) {
+	const {depth, lineEnd, pre, transform} = config;
+	const indent = '\t'.repeat(depth);
 
-function customProperties(obj, prefix = '') {
-	return flattenToVariable(obj, `${prefix}--`);
+	return Object.entries(items)
+		.map(([token, val]) => {
+			const key = `${indent}${pre}${token}`;
+
+			if (isTrueObject(val)) {
+				const configs = {
+					...config,
+					pre: '',
+					lineEnd: ',\n',
+					depth: depth + 1
+				};
+				return `${key}: (\n${transformObj(val, configs)}${indent})${lineEnd}`;
+			}
+			return `${key}: ${
+				Array.isArray(val) ? `(${transform(key, val)})` : transform(key, val)
+			}${lineEnd}`;
+		})
+		.join('');
+}
+
+function variablesMap(items = {}) {
+	const config = {
+		pre: '$',
+		depth: 0,
+		lineEnd: ';\n',
+		transform: (key, val) => val
+	};
+	return transformObj(items, config);
 }
 
 function objectValueTransform(obj, transform = (key, val) => [key, val]) {
@@ -103,16 +131,35 @@ function objectValueTransform(obj, transform = (key, val) => [key, val]) {
 	}, {});
 }
 
+// CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
+
+function customProperties(obj, prefix = '') {
+	const transform = (key, val) => [key, val[0] === '$' ? `#{${val}}` : val];
+
+	return flattenToVariable(obj, `${prefix}--`, transform);
+}
+
+const globalTransform = (pre = 'token') => (k, v) => [k, `#{$${pre}-${v}}`];
+const bannerTransform = (pre = 'token') => (k, v) => [k, `var(--${pre}-${v})`];
+
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased custom property (aka CSS variable)
  * @param {string} root "selector" name of context for properties, defaults to document :root
  */
-function globalProperties(obj, root = ':root') {
+function globalProperties(obj, root = ':root', transform = globalTransform) {
 	if (!isTrueObject(obj)) {
 		warn('globalProperties', 'need object to create custom properties', obj);
 		return '';
 	}
-	return `${root} {\r${customProperties(obj, `\t`)}};\r\n`;
+
+	const transformed = objectValueTransform(obj, (key, val) => {
+		if (key === 'font-family') {
+			return [key, objectValueTransform(val, transform('font-family'))];
+		}
+		return [key, val];
+	});
+
+	return `${root} {\r${customProperties(transformed, `\t`)}};\r\n`;
 }
 
 /**
@@ -128,8 +175,9 @@ function bannerProperties(obj) {
 		);
 		return '';
 	}
+
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		return all + globalProperties(val, `.${key}`);
+		return all + globalProperties(val, `.${key}`, bannerTransform);
 	}, '');
 }
 
@@ -144,20 +192,17 @@ function sassVariable(obj) {
 
 function jsonToStyles(obj, space = '\t') {
 	if (typeof obj === 'undefined') {
-		warn('jsonToStyles', 'cannot create styles from `undefined`', obj);
+		warn('jsonToStyles', 'cannot create styles from `undefined`');
 		return '';
 	}
 	if (!isTrueObject(obj)) {
-		warn(
-			'jsonToStyles',
-			'did you really mean to strigify a non-object?',
-			obj
-		);
+		warn('jsonToStyles', 'attempting to strigify a non-object', obj);
 		return `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
 	}
 	return JSON.stringify(obj, null, space)
 		.replace(/"([^"]+)"/g, '$1')
-		.replace(/,/g, ';');
+		.replace(/,\n/g, ';\n')
+		.replace(/,\r/g, ';\r');
 }
 
 /**
@@ -200,25 +245,24 @@ function createUnion(arr) {
  * @returns
  * export type GlobalFontSize = 'heading-1' | 'heading-2';
  */
-function unionType(obj, prefix = '') {
+function unionType(obj, prefix = '', log) {
 	if (isArray(obj) && prefix) {
 		return `export type ${prefix} = ${createUnion(obj)};\n`;
 	}
 
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
-
-		if (isTrueObject(val) && hasChildObjects(val)) {
-			all += `export type ${typeName} = ${createUnion(
-				isArray(val) ? val : Object.keys(val)
-			)};\n`;
-
-			return all + `${unionType(val, `${typeName}`)}`;
-		}
-
 		if (typeof val === 'undefined') {
 			return all;
 		}
+		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
+		if (log) {
+			console.log('unionType', {typeName}, isTrueObject(val), 'hasChildObjects', hasChildObjects(val));
+		}
+
+		if (isTrueObject(val) && hasChildObjects(val)) {
+			return all + `${unionType(val, `${typeName}`)}`;
+		}
+
 		const arr = isArray(val) ? val : Object.keys(val);
 
 		return all + `export type ${typeName} = ${createUnion(arr)};\n`;
@@ -235,4 +279,5 @@ module.exports = {
 	styleBlock,
 	createUnion,
 	unionType,
+	variablesMap,
 };

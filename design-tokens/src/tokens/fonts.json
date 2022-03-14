@@ -72,7 +72,7 @@
 		},
 
 		"cta-1": {
-			"font-size": "$font-size-small",
+			"font-size": "$font-size-caption",
 			"font-weight": "$font-weight-medium"
 		},
 		"cta-2": {
@@ -85,12 +85,12 @@
 			"font": "#{$font-weight-medium} 1rem system-ui, var(--font-family-base)"
 		},
 		"input-helper": {
-			"font-size": "$font-size-small",
+			"font-size": "$font-size-caption",
 			"line-height": "$font-lineHeight-mid"
 		},
 
 		"label": {
-			"font": "#{$font-weight-bold} #{$font-size-small}/#{$font-lineHeight-mid} var(--font-family-base)",
+			"font": "#{$font-weight-bold} #{$font-size-caption}/#{$font-lineHeight-mid} var(--font-family-base)",
 			"text-transform": "uppercase",
 			"letter-spacing": "$font-letterSpacing-some"
 		},
@@ -101,11 +101,11 @@
 		},
 
 		"caption": {
-			"font": "#{$font-size-small}/#{$font-lineHeight-mid} var(--font-family-base)"
+			"font": "#{$font-size-caption}/#{$font-lineHeight-mid} var(--font-family-base)"
 		},
 
 		"number": {
-			"font": "#{$font-size-small}/#{$font-lineHeight-mid} var(--font-family-mono)",
+			"font": "#{$font-size-caption}/#{$font-lineHeight-mid} var(--font-family-mono)",
 			"text-transform": "uppercase"
 		},
 		"monospace": {

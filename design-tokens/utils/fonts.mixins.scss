@@ -1,0 +1,40 @@
+/// Loops though a map to render styles
+/// @param {Map} $map - scss map to loop through
+@mixin styleMap($map: $typemap) {
+	@each $key, $value in $map {
+		// @if ($key == 'mobile') {
+		// 	// 1) assign mobile styles if present,
+		// 	@include mq_for_phone_only {
+		// 		@include styleMap($value);
+		// 	}
+		// } @else {
+			// 2) nest deeper into the map,
+			@if (type-of($value) == 'map') {
+				&-#{$key} {
+					@include styleMap($value);
+				}
+			} @else {
+				// 3) render styles
+				@if ($key == 'content') {
+					content: quote($value);
+				} @else {
+					#{$key}: #{$value};
+				}
+			}
+		// }
+	}
+}
+
+$typemap: () !default;
+
+// Font style mixin ////////////////////////////////////////////////
+//// Render specific type styles by searching for $name in $typemap
+//// @param {String} $name - style to find; don't add "font-" prefix
+@mixin font($name) {
+	@if map-has-key($typemap, $name) {
+		$props: map-get($typemap, $name);
+		@include styleMap($props);
+	} @else {
+		@warn 'No key "#{$name}" in map $typemap. HINT: key should not start with "font-"';
+	}
+}

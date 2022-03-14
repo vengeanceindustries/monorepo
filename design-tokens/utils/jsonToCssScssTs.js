@@ -81,38 +81,59 @@ function flattenToVariable(obj, prefix = '$', transform = transformDefault) {
 	}, '');
 }
 
-function transformObj(items = {}, config = {}) {
-	const {depth, lineEnd, pre, transform} = config;
+const transformConfig = {
+	depth: 0,
+	lineEnd: ';\n',
+	pre: '$',
+	transform: (key, val) => val
+};
+
+function transformObj(items = {}, config = transformConfig) {
+	const {depth, lineEnd, pre} = config;
 	const indent = '\t'.repeat(depth);
 
-	return Object.entries(items)
-		.map(([token, val]) => {
-			const key = `${indent}${pre}${token}`;
+	return Object.entries(items).reduce((all, [token, val]) => {
+		let key = `${pre}${token}`;
 
-			if (isTrueObject(val)) {
-				const configs = {
-					...config,
-					pre: '',
-					lineEnd: ',\n',
-					depth: depth + 1
-				};
-				return `${key}: (\n${transformObj(val, configs)}${indent})${lineEnd}`;
-			}
-			return `${key}: ${
-				Array.isArray(val) ? `(${transform(key, val)})` : transform(key, val)
+		if (!isTrueObject(val)) {
+			return all + `${indent}${key}: ${
+				Array.isArray(val) ? `(${val})` : val
 			}${lineEnd}`;
-		})
-		.join('');
+		}
+
+		const configs = {
+			...config,
+			depth: depth + 1,
+			lineEnd: ',\n',
+			pre: '',
+		};
+		return all + `${indent}${key}: (\n${transformObj(val, configs)}${indent})${lineEnd}`;
+	}, '');
 }
 
-function variablesMap(items = {}) {
-	const config = {
-		pre: '$',
-		depth: 0,
-		lineEnd: ';\n',
-		transform: (key, val) => val
-	};
-	return transformObj(items, config);
+function flattenToSassMap(obj, prefix = '$', transform = transformDefault) {
+	if (!isTrueObject(obj)) {
+		warn('flattenToVariable', 'cannot create styles from non-object', obj);
+		return '';
+	}
+	return Object.entries(obj).reduce((all, [keyOrig, valOrig]) => {
+		[key, val] = transform(keyOrig, valOrig);
+
+		let attr = `${prefix}${key}`;
+
+		if (isTrueObject(val) && hasChildObjects(val)) {
+			return all + `${flattenToSassMap(val, `${attr}-`, transform)}`;
+		}
+
+		return all + `${attr}: (\n${jsonToMap(val)});\n`;
+	}, '');
+}
+
+function variablesMap(items = {}, deeplyNest = true) {
+	if (deeplyNest) {
+		return transformObj(items);
+	}
+	return flattenToSassMap(items);
 }
 
 function objectValueTransform(obj, transform = (key, val) => [key, val]) {
@@ -190,6 +211,16 @@ function sassVariable(obj) {
 	return flattenToVariable(obj, (prefix = '$'));
 }
 
+function jsonToMap(obj, depth = 1) {
+	const config = {
+		...transformConfig,
+		depth,
+		lineEnd: ',\n',
+		pre: '',
+	};
+	return Array.isArray(obj) ? obj : transformObj(obj, config);
+}
+
 function jsonToStyles(obj, space = '\t') {
 	if (typeof obj === 'undefined') {
 		warn('jsonToStyles', 'cannot create styles from `undefined`');
@@ -245,7 +276,7 @@ function createUnion(arr) {
  * @returns
  * export type GlobalFontSize = 'heading-1' | 'heading-2';
  */
-function unionType(obj, prefix = '', log) {
+function unionType(obj, prefix = '') {
 	if (isArray(obj) && prefix) {
 		return `export type ${prefix} = ${createUnion(obj)};\n`;
 	}
@@ -255,9 +286,6 @@ function unionType(obj, prefix = '', log) {
 			return all;
 		}
 		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
-		if (log) {
-			console.log('unionType', {typeName}, isTrueObject(val), 'hasChildObjects', hasChildObjects(val));
-		}
 
 		if (isTrueObject(val) && hasChildObjects(val)) {
 			return all + `${unionType(val, `${typeName}`)}`;

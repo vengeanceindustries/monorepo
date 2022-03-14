@@ -25,8 +25,8 @@ const { imports: fontImports, style: fontStyles, ...font } = fonts;
 
 const fontFamily = FL['font-family'] || FL.font?.family;
 
-const globals = {
-	// use FL for the default root styles
+// use FL for the default root styles
+const globalTokens = {
 	site: FL.site,
 	name: FL.name,
 	color: FL.color,
@@ -63,63 +63,23 @@ ${unionType(Object.keys(allBannerTokens), 'SiteName')}`;
 let scss = `// auto-generated file - design system variables //\n
 // BREAKPOINTS
 ${sassVariable({ breakpoint: breakpoints })}
-${variablesMap({
-	'breakpoint-device': breakpointSizes.device,
-	'breakpoint-size': breakpointSizes.size
-})}
+${variablesMap({ breakpoint: breakpointSizes }, false)}
 // CONTENT WIDTHS
 ${sassVariable({ content })}
-${variablesMap({ 'content-width': content.width })}
+${variablesMap({ content }, false)}`;
+scss += `
+// content variables map:
 // SCSS FONTS
 ${sassVariable({ font })}
 // SCSS COLOR VALUES
 ${sassVariable(color)}
 ${variablesMap({ color })}
 // GLOBAL CSS VARIABLES
-${globalProperties(globals)}
+${globalProperties(globalTokens)}
 // BANNER CSS VARS
 ${bannerProperties(allBannerTokens)}`;
 
-const typemaps = `\n
-${variablesMap({typemap: fontStyles})}\n
-// Font style mixin ////////////////////////////////////////////////
-//// Render specific type styles by searching for $name in $typemap
-//// @param {String} $name - style to find; don't add "font-" prefix
-@mixin font($name) {
-	@if map-has-key($typemap, $name) {
-		$props: map-get($typemap, $name);
-		@include styleMap($props);
-	} @else {
-		@warn 'No key "#{$name}" in map $typemap. HINT: key should not start with "font-"';
-	}
-}
-
-/// Loops though a map to render styles
-/// @param {Map} $typemap - font map to loop through
-@mixin styleMap($map) {
-	@each $key, $value in $typemap {
-		@if ($key == 'mobile') {
-			// 1) assign mobile styles if present,
-			@include mq_for_phone_only {
-				@include styleMap($value);
-			}
-		} @else {
-			// 2) nest deeper into the map,
-			@if (type-of($value) == 'map') {
-				&-#{$key} {
-					@include styleMap($value);
-				}
-			} @else {
-				// 3) render styles
-				@if ($key == 'content') {
-					content: quote($value);
-				} @else {
-					#{$key}: #{$value};
-				}
-			}
-		}
-	}
-}\n`;
+const typemaps = `\n${variablesMap({typemap: fontStyles})}`;
 
 const buttons = `
 // Button style blocks

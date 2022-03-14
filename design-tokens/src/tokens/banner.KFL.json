@@ -36,7 +36,7 @@
 		},
 		"accent": {
 			"color": "$white",
-			"background-color": "$brand_primary"
+			"background-color": "var(--color-primary)"
 		}
 	}
 }

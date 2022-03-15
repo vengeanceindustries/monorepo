@@ -65,10 +65,10 @@ const icons =
 // read all files
 async function readFileData(file) {
 	const raw = fs.readFileSync(file, 'utf-8');
-
+	
 	const optimized = await svgo().optimize(raw, { path: file });
 
-	const data = await svgToPath(optimized.data).then(extractPath.parse);
+	const data = await svgToPath(optimized.data);
 	return data;
 }
 
@@ -92,30 +92,29 @@ async function convertAllSvgs() {
 		return;
 	}
 
-	const allData = await Promise.all(
+	const allSVGs = await Promise.all(
 		icons.map((name) =>
 			readFileData(path.resolve(sourcePath, `${name}.svg`))
 		)
 	);
+	const allPaths = await Promise.all(
+		allSVGs.map(async (data) => await extractPath.parse(data))
+	);
 
 	const iconList = [];
 
-	const allExports = allData.reduce((all, datum, i) => {
-		const name = icons[i];
+	const {svgs, paths} = icons.reduce((all, icon, i) => {
+		const name = icon.replace('ic_', '');
 		iconList.push(name);
-		all[name.replace('ic_', '')] = datum;
+		all.paths[name] = allPaths[i];
+		all.svgs[name] = allSVGs[i];
 		return all;
-	}, {});
+	}, { paths: {}, svgs: {} });
 
-	console.log('icons:', iconList);
+	const jsonFile = fs.writeFileSync(distJson, JSON.stringify(svgs, null, '\t').concat('\n'));
+	const spriteFile = fs.writeFileSync(distSprite, convertToSprite(paths));
 
-	const jsonStr = JSON.stringify(allExports, null, '\t').concat('\n');
-	const dataStr = convertToSprite(allExports);
-
-	const jsonFile = fs.writeFileSync(distJson, jsonStr);
-	const spriteFile = fs.writeFileSync(distSprite, dataStr);
-
-	if (!spriteFile) {
+	if (!jsonFile && !spriteFile) {
 		successMessage('icons written to file! 📝');
 	}
 }

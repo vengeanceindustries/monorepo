@@ -1,7 +1,7 @@
 const {
 	bannerProperties,
 	globalProperties,
-	objectValueTransform,
+	fontStylesMap,
 	sassVariable,
 	styleBlock,
 	unionType,
@@ -11,10 +11,10 @@ const {
 // GLOBAL TOKENS //
 const breakpoints = require('../src/tokens/breakpoints.json');
 const color = require('../src/tokens/colors.global.json');
-const button = require('../src/tokens/colors.buttons.json');
-const themes = require('../src/tokens/colors.themes.json');
 const content = require('../src/tokens/content.json');
 const fonts = require('../src/tokens/fonts.json');
+const button = require('../src/tokens/colors.buttons.json');
+const themes = require('../src/tokens/colors.themes.json');
 const allTokens = {  breakpoints, button, color, content, fonts };
 // BANNER TOKENS //
 const FL = require('../src/tokens/banner.FL.json');
@@ -23,15 +23,15 @@ const allBannerTokens = { FL, KFL };
 
 const { imports: fontImports, style: fontStyles, ...font } = fonts;
 
-const fontFamily = FL['font-family'] || FL.font?.family;
+const fontFamily = FL.font.family;
 
 // use FL for the default root styles
 const globalTokens = {
 	site: FL.site,
 	name: FL.name,
 	color: FL.color,
-	font: { family: font.family },
-	'font-family': fontFamily,
+	// color: {...color, ...FL.color},
+	font: { family: { ...font.family, ...fontFamily, } },
 	button: FL.theme.light.button,
 	theme: FL.theme,
 };
@@ -72,14 +72,16 @@ scss += `
 // SCSS FONTS
 ${sassVariable({ font })}
 // SCSS COLOR VALUES
-${sassVariable(color)}
-${variablesMap({ color })}
+${sassVariable({ color })}`;
+// scss += `${sassVariable(color)}`;
+scss += `${variablesMap({ color })}`;
+scss += `
 // GLOBAL CSS VARIABLES
 ${globalProperties(globalTokens)}
 // BANNER CSS VARS
 ${bannerProperties(allBannerTokens)}`;
 
-const typemaps = `\n${variablesMap({typemap: fontStyles})}`;
+const typemaps = `\n${fontStylesMap(fontStyles)}`;
 
 const buttons = `
 // Button style blocks
@@ -92,7 +94,7 @@ ${styleBlock({ Theme: themes }, '.', '--')}
 `;
 
 // scss += `\n// STYLE BLOCKS - TEMPORARY //\n` + buttons + themeStyles;
-scss += `\n// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
+// scss += `\n// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 
 module.exports = {
 	scss,

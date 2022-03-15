@@ -58,34 +58,41 @@ function titleCase(str) {
 
 const transformDefault = (key, val) => [key, val];
 
+const variableSass = (val) => `#{$${val}}`;
+const variableCss = (val) => `var(--$${val})`;
+
 /**
  * @param {object} obj nested object whose keys will be flattened to a css-style variable
  * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
- * @param {function} transform allows transformation of key or value before looping
  */
-function flattenToVariable(obj, prefix = '$', transform = transformDefault) {
+function flattenToVariable(obj, prefix = '$', useSassVar = false) {
 	if (!isTrueObject(obj)) {
 		warn('flattenToVariable', 'cannot create styles from non-object', obj);
 		return '';
 	}
-	return Object.entries(obj).reduce((all, [keyOrig, valOrig]) => {
-		[key, val] = transform(keyOrig, valOrig);
-
+	return Object.entries(obj).reduce((all, [key, val]) => {
 		let attr = `${prefix}${key}`;
 
 		if (isTrueObject(val)) {
-			return all + `${flattenToVariable(val, `${attr}-`, transform)}`;
+			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
 		}
 
-		return all + `${attr}: ${Array.isArray(val) ? `(${val})` : val};\n`;
+		let valTransformed = Array.isArray(val) ? `(${val})` : val;
+
+		const matches = typeof val === 'string' ? RegExp(/\{(.*?)\}/g).exec(val) : null;
+		if (matches) {
+			const value = matches[1].replace(/\./g, '-');
+			valTransformed = useSassVar ? variableSass(value) : variableCss(value);
+		}
+
+		return all + `${attr}: ${valTransformed};\n`;
 	}, '');
 }
 
 const transformConfig = {
 	depth: 0,
 	lineEnd: ';\n',
-	pre: '$',
-	transform: (key, val) => val
+	pre: '$'
 };
 
 function transformObj(items = {}, config = transformConfig) {
@@ -111,18 +118,17 @@ function transformObj(items = {}, config = transformConfig) {
 	}, '');
 }
 
-function flattenToSassMap(obj, prefix = '$', transform = transformDefault) {
+function flattenToSassMap(obj, prefix = '$') {
 	if (!isTrueObject(obj)) {
 		warn('flattenToVariable', 'cannot create styles from non-object', obj);
 		return '';
 	}
-	return Object.entries(obj).reduce((all, [keyOrig, valOrig]) => {
-		[key, val] = transform(keyOrig, valOrig);
 
+	return Object.entries(obj).reduce((all, [key, val]) => {
 		let attr = `${prefix}${key}`;
 
 		if (isTrueObject(val) && hasChildObjects(val)) {
-			return all + `${flattenToSassMap(val, `${attr}-`, transform)}`;
+			return all + `${flattenToSassMap(val, `${attr}-`)}`;
 		}
 
 		return all + `${attr}: (\n${jsonToMap(val)});\n`;
@@ -136,51 +142,23 @@ function variablesMap(items = {}, deeplyNest = true) {
 	return flattenToSassMap(items);
 }
 
-function objectValueTransform(obj, transform = (key, val) => [key, val]) {
-	if (!isTrueObject(obj)) {
-		warn('objectValueTransform', 'cannot create styles from non-object', obj);
-		return {};
-	}
-
-	return Object.entries(obj).reduce((all, [keyOrig, valOrig]) => {
-		[key, val] = transform(keyOrig, valOrig);
-
-		all[key] = isTrueObject(val)
-			? objectValueTransform(val, transform)
-			: val;
-		return all;
-	}, {});
-}
-
 // CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
 
-function customProperties(obj, prefix = '') {
-	const transform = (key, val) => [key, val[0] === '$' ? `#{${val}}` : val];
-
-	return flattenToVariable(obj, `${prefix}--`, transform);
+function customProperties(obj, prefix = '', useSassVar) {
+	return flattenToVariable(obj, `${prefix}--`, useSassVar);
 }
-
-const globalTransform = (pre = 'token') => (k, v) => [k, `#{$${pre}-${v}}`];
-const bannerTransform = (pre = 'token') => (k, v) => [k, `var(--${pre}-${v})`];
 
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased custom property (aka CSS variable)
  * @param {string} root "selector" name of context for properties, defaults to document :root
  */
-function globalProperties(obj, root = ':root', transform = globalTransform) {
+function globalProperties(obj, root = ':root', useSassVar = true) {
 	if (!isTrueObject(obj)) {
 		warn('globalProperties', 'need object to create custom properties', obj);
 		return '';
 	}
 
-	const transformed = objectValueTransform(obj, (key, val) => {
-		if (key === 'font-family') {
-			return [key, objectValueTransform(val, transform('font-family'))];
-		}
-		return [key, val];
-	});
-
-	return `${root} {\r${customProperties(transformed, `\t`)}};\r\n`;
+	return `${root} {\r${customProperties(obj, `\t`, useSassVar)}};\r\n`;
 }
 
 /**
@@ -198,7 +176,7 @@ function bannerProperties(obj) {
 	}
 
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		return all + globalProperties(val, `.${key}`, bannerTransform);
+		return all + globalProperties(val, `.${key}`, true);
 	}, '');
 }
 
@@ -259,6 +237,11 @@ function styleBlock(obj, prefix = '.', join = '-') {
 	}, '');
 }
 
+function fontStylesMap(obj) {
+	const typemap = obj;
+	return variablesMap({ typemap });
+}
+
 // TYPESCRIPT TYPES ///////////////////////////////////
 
 function createUnion(arr) {
@@ -299,13 +282,11 @@ function unionType(obj, prefix = '') {
 
 module.exports = {
 	bannerProperties,
-	customProperties,
+	fontStylesMap,
 	globalProperties,
-	objectValueTransform,
 	sassVariable,
 	successMessage,
 	styleBlock,
-	createUnion,
 	unionType,
 	variablesMap,
 };

@@ -1,42 +1,58 @@
 {
 	"site": "'KFL'",
 	"name": "'Kids Foot Locker'",
-	"font-family": {
-		"base": "Roboto",
-		"heading": "Poppins",
-		"mono": "RobotoMono"
+	"font": {
+		"family": {
+			"base": "var(--font-family-Roboto)",
+			"heading": "var(--font-family-Poppins)",
+			"mono": "var(--font-family-RobotoMono)"
+		}
 	},
 	"color": {
-		"primary": "$science_blue",
-		"secondary": "$mineshaft",
-		"highlight": "$science_blue"
+		"primary": "{color.science_blue}",
+		"secondary": "{color.mineshaft}",
+		"highlight": "{color.science_blue}"
 	},
 	"theme": {
 		"light": {
 			"css": {
-				"color": "$black",
-				"background-color": "$white"
+				"color": "{color.black}",
+				"background-color": "{color.white}"
 			},
 			"button": {
 				"primary": {
-					"color": "$black",
-					"border-color": "$white",
-					"background-color": "$white"
+					"color": "{color.black}",
+					"border-color": "{color.white}",
+					"background-color": "{color.white}"
 				},
 				"secondary": {
-					"color": "$white",
-					"border-color": "$white",
-					"background-color": "$black"
+					"color": "{color.white}",
+					"border-color": "{color.white}",
+					"background-color": "{color.black}"
 				}
 			}
 		},
 		"dark": {
-			"color": "$white",
-			"background-color": "$mineshaft"
+			"color": "{color.white}",
+			"background-color": "{color.mineshaft}"
 		},
 		"accent": {
-			"color": "$white",
-			"background-color": "var(--color-primary)"
+			"css": {
+				"color": "{color.white}",
+				"background-color": "var(--color-primary)"
+			},
+			"button": {
+				"primary": {
+					"color": "var(--color-primary)",
+					"border-color": "{color.white}",
+					"background-color": "{color.white}"
+				},
+				"secondary": {
+					"color": "{color.white}",
+					"border-color": "{color.white}",
+					"background-color": "var(--color-primary)"
+				}
+			}
 		}
 	}
 }

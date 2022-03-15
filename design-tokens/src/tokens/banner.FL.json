@@ -1,52 +1,55 @@
 {
 	"site": "'FL'",
 	"name": "'Foot Locker'",
-	"font-family": {
-		"base": "Roboto",
-		"heading": "Roboto",
-		"mono": "RobotoMono"
+	"font": {
+		"family": {
+			"base": "var(--font-family-Roboto)",
+			"heading": "var(--font-family-Roboto)",
+			"mono": "var(--font-family-RobotoMono)",
+			"input": "system-ui, var(--font-family-base)"
+		}
 	},
 	"color": {
-		"primary": "$my_crimson_is_better_than_yours",
-		"secondary": "$woodsmoke",
-		"highlight": "$my_crimson_is_better_than_yours",
-		"black": "$woodsmoke",
-		"grey": "$emperor"
+		"primary": "{color.my_crimson_is_better_than_yours}",
+		"secondary": "{color.woodsmoke}",
+		"highlight": "{color.my_crimson_is_better_than_yours}",
+		"black": "{color.woodsmoke}",
+		"grey": "{color.emperor}"
 	},
 	"theme": {
 		"light": {
 			"css": {
-				"color": "$black",
-				"background-color": "$white"
+				"color": "{color.black}",
+				"background-color": "{color.white}"
 			},
 			"button": {
 				"primary": {
-					"color": "$black",
-					"border-color": "$white",
-					"background-color": "$white"
+					"color": "{color.black}",
+					"border-color": "{color.white}",
+					"background-color": "{color.white}"
 				},
 				"secondary": {
-					"color": "$white",
-					"border-color": "$white",
-					"background-color": "$black"
+					"color": "{color.white}",
+					"border-color": "{color.white}",
+					"background-color": "{color.black}"
 				}
 			}
 		},
 		"dark": {
 			"css": {
-				"color": "$white",
-				"background-color": "$mineshaft"
+				"color": "{color.white}",
+				"background-color": "{color.mineshaft}"
 			},
 			"button": {
 				"primary": {
-					"color": "$black",
-					"border-color": "$white",
-					"background-color": "$white"
+					"color": "{color.black}",
+					"border-color": "{color.white}",
+					"background-color": "{color.white}"
 				},
 				"secondary": {
-					"color": "$white",
-					"border-color": "$white",
-					"background-color": "$black"
+					"color": "{color.white}",
+					"border-color": "{color.white}",
+					"background-color": "{color.black}"
 				}
 			}
 		}

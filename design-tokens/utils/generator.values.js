@@ -40,10 +40,6 @@ const globalCustomProperties = {
 	theme: FL.theme,
 };
 
-// const breakpointSizes = {
-// 	device: { em: {}, px: {} },
-// 	size: { em: {}, px: {} }
-// };
 const breakpointSizes = { device: {}, size: {} };
 const bp = {};
 const mq = { at: {}, below: {} };
@@ -55,39 +51,39 @@ Object.entries(breakpoints).forEach(([id, { name, width }]) => {
 	breakpointSizes.size[id] = em;
 	breakpointSizes.device[name] = em;
 	bp[name] = em;
-	mq.at[name] = `(min-width: {bp.${name}})`;
-	mq.below[name] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
-	mqs.up[id] = `{mq.at.${name}}`;
-	mqs.down[id] = `{mq.below.${name}}`;
+	// mq.at[name] = `(min-width: {bp.${name}})`;
+	// mq.below[name] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
+	// mqs.up[id] = `{mq.at.${name}}`;
+	// mqs.down[id] = `{mq.below.${name}}`;
+	mqs.up[id] = `(min-width: {bp.${name}})`;
+	mqs.down[id] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
 	// breakpointList.mq[`for-${name}-up`] = `(min-width: {bp.${name}})`;
 	// breakpointList.mq[`for-below-${name}`] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
 });
 
-let scss = `// auto-generated file - design system variables //\n
-// BREAKPOINTS
+let scss = `// auto-generated file - design system variables //\r
+// BREAKPOINTS //\r
 ${sassVariable({ 'one-px-ems': `${1 / gridBase}em` })}
-${sassVariable({ breakpoint: breakpoints })}
-${variablesMap({ breakpoint: breakpointSizes }, false)}`;
-scss += `${sassVariable({ bp, mq }, true)}
+${variablesMap({ breakpoint: breakpointSizes }, false)}
+${sassVariable({ bp, mq }, true)}
 ${variablesMap({ mqs }, false)}`;
 scss += `
-// CONTENT WIDTHS
-${sassVariable({ content })}
-${variablesMap({ content }, false)}`;
+// CONTENT WIDTHS //\r
+${variablesMap({ content }, false)}
+${sassVariable({ content })}`;
 scss += `
-// SCSS FONTS
+// SCSS FONTS //\r
 ${sassVariable({ font })}
 // SCSS COLOR VALUES
+${variablesMap({ color })}
 ${sassVariable({ color })}`;
-// scss += `${sassVariable(color)}`;
-scss += `${variablesMap({ color })}`;
 scss += `
 // GLOBAL CSS VARIABLES
 ${globalProperties(globalCustomProperties)}
 // BANNER CSS VARS
 ${bannerProperties(allBannerTokens)}`;
 
-const typemaps = `\n${fontStylesMap(fontStyles)}`;
+const typemaps = `\r${fontStylesMap(fontStyles)}`;
 
 const buttons = `
 // Button style blocks
@@ -99,10 +95,10 @@ const themeStyles = `
 ${styleBlock({ Theme: themes }, '.', '--')}
 `;
 
-// scss += `\n// STYLE BLOCKS - TEMPORARY //\n` + buttons + themeStyles;
-// scss += `\n// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
+// scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
+// scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 
-let types = `// auto-generated file - design system variables //\n
+let types = `// auto-generated file - design system variables //\r
 // BREAKPOINTS
 ${unionType(breakpointSizes, 'Breakpoint')}
 // CONTENT WIDTHS

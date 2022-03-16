@@ -89,13 +89,13 @@ function flattenToVariable(obj, prefix = '$', useSassVar = false) {
 			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
 		}
 
-		return all + `${attr}: ${transformValue(val, useSassVar)};\n`;
+		return all + `${attr}: ${transformValue(val, useSassVar)};\r`;
 	}, '');
 }
 
 const transformConfig = {
 	depth: 0,
-	lineEnd: ';\n',
+	lineEnd: ';\r\n',
 	pre: '$',
 	useSassVar: true
 };
@@ -115,10 +115,10 @@ function transformObj(items = {}, config = transformConfig) {
 		const configs = {
 			...config,
 			depth: depth + 1,
-			lineEnd: ',\n',
+			lineEnd: ',\r',
 			pre: '',
 		};
-		return all + `${indent}${key}: (\n${transformObj(val, configs)}${indent})${lineEnd}`;
+		return all + `${indent}${key}: (\r${transformObj(val, configs)}${indent})${lineEnd}`;
 	}, '');
 }
 
@@ -135,7 +135,7 @@ function flattenToSassMap(obj, prefix = '$') {
 			return all + `${flattenToSassMap(val, `${attr}-`)}`;
 		}
 
-		return all + `${attr}: (\n${jsonToMap(val)});\n`;
+		return all + `${attr}: (\r${jsonToMap(val)});\r`;
 	}, '');
 }
 
@@ -197,7 +197,7 @@ function jsonToMap(obj, depth = 1) {
 	const config = {
 		...transformConfig,
 		depth,
-		lineEnd: ',\n',
+		lineEnd: ',\r',
 		pre: '',
 	};
 	return Array.isArray(obj) ? obj : transformObj(obj, config);
@@ -214,8 +214,7 @@ function jsonToStyles(obj, space = '\t') {
 	}
 	return JSON.stringify(obj, null, space)
 		.replace(/"([^"]+)"/g, '$1')
-		.replace(/,\n/g, ';\n')
-		.replace(/,\r/g, ';\r');
+		.replace(/,\r/g, ';\r\n');
 }
 
 /**
@@ -265,7 +264,7 @@ function createUnion(arr) {
  */
 function unionType(obj, prefix = '') {
 	if (isArray(obj) && prefix) {
-		return `export type ${prefix} = ${createUnion(obj)};\n`;
+		return `export type ${prefix} = ${createUnion(obj)};\r`;
 	}
 
 	return Object.entries(obj).reduce((all, [key, val]) => {
@@ -280,7 +279,7 @@ function unionType(obj, prefix = '') {
 
 		const arr = isArray(val) ? val : Object.keys(val);
 
-		return all + `export type ${typeName} = ${createUnion(arr)};\n`;
+		return all + `export type ${typeName} = ${createUnion(arr)};\r`;
 	}, '');
 }
 

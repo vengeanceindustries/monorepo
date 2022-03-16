@@ -111,7 +111,7 @@ async function convertAllSvgs() {
 		return all;
 	}, { paths: {}, svgs: {} });
 
-	const jsonFile = fs.writeFileSync(distJson, JSON.stringify(svgs, null, '\t').concat('\n'));
+	const jsonFile = fs.writeFileSync(distJson, JSON.stringify(svgs, null, '\t').concat('\r'));
 	const spriteFile = fs.writeFileSync(distSprite, convertToSprite(paths));
 
 	if (!jsonFile && !spriteFile) {

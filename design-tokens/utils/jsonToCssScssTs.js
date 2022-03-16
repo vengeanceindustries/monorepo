@@ -61,6 +61,18 @@ const transformDefault = (key, val) => [key, val];
 const variableSass = (val) => `#{$${val}}`;
 const variableCss = (val) => `var(--$${val})`;
 
+function transformValue (val, useSassVar = false) {
+	let valTransformed = Array.isArray(val) ? `(${val})` : val;
+
+	const matches = typeof val === 'string' ? RegExp(/\{(.*?)\}/g).exec(val) : null;
+	if (matches) {
+		const value = matches[1].replace(/\./g, '-');
+		const valFormatted = useSassVar ? variableSass(value) : variableCss(value);
+		valTransformed = val.replace(matches[0], valFormatted);
+	}
+	return valTransformed;
+} 
+
 /**
  * @param {object} obj nested object whose keys will be flattened to a css-style variable
  * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
@@ -77,35 +89,27 @@ function flattenToVariable(obj, prefix = '$', useSassVar = false) {
 			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
 		}
 
-		let valTransformed = Array.isArray(val) ? `(${val})` : val;
-
-		const matches = typeof val === 'string' ? RegExp(/\{(.*?)\}/g).exec(val) : null;
-		if (matches) {
-			const value = matches[1].replace(/\./g, '-');
-			valTransformed = useSassVar ? variableSass(value) : variableCss(value);
-		}
-
-		return all + `${attr}: ${valTransformed};\n`;
+		return all + `${attr}: ${transformValue(val, useSassVar)};\n`;
 	}, '');
 }
 
 const transformConfig = {
 	depth: 0,
 	lineEnd: ';\n',
-	pre: '$'
+	pre: '$',
+	useSassVar: true
 };
 
 function transformObj(items = {}, config = transformConfig) {
-	const {depth, lineEnd, pre} = config;
+	const {depth, lineEnd, pre, useSassVar} = config;
+
 	const indent = '\t'.repeat(depth);
 
 	return Object.entries(items).reduce((all, [token, val]) => {
 		let key = `${pre}${token}`;
 
 		if (!isTrueObject(val)) {
-			return all + `${indent}${key}: ${
-				Array.isArray(val) ? `(${val})` : val
-			}${lineEnd}`;
+			return all + `${indent}${key}: ${transformValue(val, useSassVar)}${lineEnd}`;
 		}
 
 		const configs = {
@@ -185,8 +189,8 @@ function bannerProperties(obj) {
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased sass variable
  */
-function sassVariable(obj) {
-	return flattenToVariable(obj, (prefix = '$'));
+function sassVariable(obj, useSassVar = true) {
+	return flattenToVariable(obj, '$', useSassVar);
 }
 
 function jsonToMap(obj, depth = 1) {

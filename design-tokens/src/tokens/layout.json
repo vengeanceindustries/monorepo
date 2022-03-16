@@ -1,0 +1,36 @@
+{
+	"grid": {
+		"base": 16
+	},
+	"breakpoints": {
+		"xs": {
+			"name": "phone",
+			"width": 320
+		},
+		"sm": {
+			"name": "tablet-portrait",
+			"width": 600
+		},
+		"md": {
+			"name": "tablet-landscape",
+			"width": 900
+		},
+		"lg": {
+			"name": "desktop",
+			"width": 1200
+		},
+		"max": {
+			"name": "desktop-max",
+			"width": 1300
+		}
+	},
+	"content": {
+		"width": {
+			"xsmall": 320,
+			"small": 640,
+			"medium": 960,
+			"large": 1300,
+			"xlarge": 1680
+		}
+	}
+}

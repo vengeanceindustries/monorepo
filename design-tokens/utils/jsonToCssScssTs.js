@@ -61,17 +61,20 @@ const transformDefault = (key, val) => [key, val];
 const variableSass = (val) => `#{$${val}}`;
 const variableCss = (val) => `var(--$${val})`;
 
-function transformValue (val, useSassVar = false) {
+function transformValue(val, useSassVar = false) {
 	let valTransformed = Array.isArray(val) ? `(${val})` : val;
 
-	const matches = typeof val === 'string' ? RegExp(/\{(.*?)\}/g).exec(val) : null;
+	const matches =
+		typeof val === 'string' ? RegExp(/\{(.*?)\}/g).exec(val) : null;
 	if (matches) {
 		const value = matches[1].replace(/\./g, '-');
-		const valFormatted = useSassVar ? variableSass(value) : variableCss(value);
+		const valFormatted = useSassVar
+			? variableSass(value)
+			: variableCss(value);
 		valTransformed = val.replace(matches[0], valFormatted);
 	}
 	return valTransformed;
-} 
+}
 
 /**
  * @param {object} obj nested object whose keys will be flattened to a css-style variable
@@ -89,7 +92,14 @@ function flattenToVariable(obj, prefix = '$', useSassVar = false) {
 			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
 		}
 
-		return all + `${attr}: ${transformValue(val, useSassVar)};\r`;
+		return (
+			all +
+			`${attr}: ${
+				Array.isArray(val)
+					? `(${val})`
+					: transformValue(val, useSassVar)
+			};\r`
+		);
 	}, '');
 }
 
@@ -97,11 +107,11 @@ const transformConfig = {
 	depth: 0,
 	lineEnd: ';\r\n',
 	pre: '$',
-	useSassVar: true
+	useSassVar: true,
 };
 
 function transformObj(items = {}, config = transformConfig) {
-	const {depth, lineEnd, pre, useSassVar} = config;
+	const { depth, lineEnd, pre, useSassVar } = config;
 
 	const indent = '\t'.repeat(depth);
 
@@ -109,7 +119,10 @@ function transformObj(items = {}, config = transformConfig) {
 		let key = `${pre}${token}`;
 
 		if (!isTrueObject(val)) {
-			return all + `${indent}${key}: ${transformValue(val, useSassVar)}${lineEnd}`;
+			return (
+				all +
+				`${indent}${key}: ${transformValue(val, useSassVar)}${lineEnd}`
+			);
 		}
 
 		const configs = {
@@ -118,7 +131,13 @@ function transformObj(items = {}, config = transformConfig) {
 			lineEnd: ',\r',
 			pre: '',
 		};
-		return all + `${indent}${key}: (\r${transformObj(val, configs)}${indent})${lineEnd}`;
+		return (
+			all +
+			`${indent}${key}: (\r${transformObj(
+				val,
+				configs
+			)}${indent})${lineEnd}`
+		);
 	}, '');
 }
 
@@ -158,7 +177,11 @@ function customProperties(obj, prefix = '', useSassVar) {
  */
 function globalProperties(obj, root = ':root', useSassVar = true) {
 	if (!isTrueObject(obj)) {
-		warn('globalProperties', 'need object to create custom properties', obj);
+		warn(
+			'globalProperties',
+			'need object to create custom properties',
+			obj
+		);
 		return '';
 	}
 
@@ -253,7 +276,7 @@ function createUnion(arr) {
 		return '';
 	}
 	return arr
-		.map((item) => (typeof item === 'string' ? `'${item}'` : item))
+		.map((item) => (typeof item === 'string' ? `"${item}"` : item))
 		.join(' | ');
 }
 

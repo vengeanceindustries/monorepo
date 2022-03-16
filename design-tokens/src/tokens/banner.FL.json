@@ -1,6 +1,6 @@
 {
-	"site": "'FL'",
-	"name": "'Foot Locker'",
+	"site": "FL",
+	"name": "Foot Locker",
 	"font": {
 		"family": {
 			"base": "var(--font-family-Roboto)",

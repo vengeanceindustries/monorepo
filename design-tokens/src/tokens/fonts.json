@@ -37,12 +37,10 @@
 		"heading": 1.1,
 		"tight": 1
 	},
-	"letter-spacing": [0, "0.5px"],
 	"letterSpacing": {
 		"none": 0,
 		"some": "0.5px"
 	},
-	"text-transform": ["none", "capitalize", "lowercase", "uppercase"],
 	"textTransform": {
 		"none": "none",
 		"capitalize": "capitalize",

@@ -3,7 +3,8 @@ const path = require('path');
 
 const { successMessage } = require('./jsonToCssScssTs');
 
-const { scss, types } = require('./generator.values');
+const { types } = require('./generator.types');
+const { scss } = require('./generator.values');
 const { convertAllSvgs } = require('./generator.icons');
 
 fs.ensureDirSync(path.resolve(__dirname, '../dist/'));

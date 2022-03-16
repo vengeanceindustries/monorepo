@@ -61,7 +61,8 @@ Object.entries(breakpoints).forEach(([id, { name, width }]) => {
 	// breakpointList.mq[`for-below-${name}`] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
 });
 
-let scss = `// auto-generated file - design system variables //\r
+let scss = `// auto-generated file - design system variables //
+
 // BREAKPOINTS //\r
 ${sassVariable({ 'one-px-ems': `${1 / gridBase}em` })}
 ${variablesMap({ breakpoint: breakpointSizes }, false)}
@@ -98,26 +99,8 @@ ${styleBlock({ Theme: themes }, '.', '--')}
 // scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
 // scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 
-let types = `// auto-generated file - design system variables //\r
-// BREAKPOINTS
-${unionType(breakpointSizes, 'Breakpoint')}
-// CONTENT WIDTHS
-${unionType(content, 'Content')}
-// COLOR NAMES
-${unionType({ color }, 'Global')}
-// FONT VALUES
-${unionType({ font }, 'Global')}
-// FONT STYLES & NAMES
-${unionType({ fontStyle: {
-	name: Object.keys(fontStyles),
-	family: fontFamily
-} })}
-// BANNER NAMES
-${unionType(Object.keys(allBannerTokens), 'SiteName')}`;
-
 module.exports = {
 	scss,
-	types,
 	allBannerTokens,
 	fontImports,
 };

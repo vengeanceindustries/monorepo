@@ -12,7 +12,7 @@ const {
 
 const color = require('../src/tokens/colors.global.json');
 const layout = require('../src/tokens/layout.json');
-const {breakpoints, content, grid} = layout;
+const { breakpoints, content, grid } = layout;
 const gridBase = grid.base;
 
 const fonts = require('../src/tokens/fonts.json');
@@ -35,7 +35,7 @@ const globalCustomProperties = {
 	name: FL.name,
 	color: FL.color,
 	// color: {...color, ...FL.color},
-	font: { family: { ...font.family, ...fontFamily, } },
+	font: { family: { ...font.family, ...fontFamily } },
 	button: FL.theme.light.button,
 	theme: FL.theme,
 };

@@ -36,7 +36,7 @@ function hasChildObjects(obj) {
  * @description convert string of space-separated or dash-separated words to camelCase
  * Returned string will start with lowercase letter unless option.titleCase is true.
  */
-function camelize(str, options) {
+function camelize(str, options = {}) {
 	if (typeof str !== 'string') {
 		return '';
 	}
@@ -236,7 +236,7 @@ function jsonToStyles(obj, space = '\t') {
 		return `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
 	}
 	return JSON.stringify(obj, null, space)
-		.replace(/"([^"]+)"/g, '$1')
+		.replace(/"([^"]+)":/g, '$1:')
 		.replace(/,\r/g, ';\r\n');
 }
 
@@ -266,6 +266,18 @@ function styleBlock(obj, prefix = '.', join = '-') {
 function fontStylesMap(obj) {
 	const typemap = obj;
 	return variablesMap({ typemap });
+}
+
+// JAVASCRIPT TYPES ///////////////////////////////////
+
+function jsObject(obj, prefix = '') {
+	return Object.entries(obj).reduce((all, [key, val]) => {
+		const name = `${prefix}${camelize(key)}`;
+
+		return (
+			all + `export const ${name} = ${JSON.stringify(val, null, '\t')};\r`
+		);
+	}, '');
 }
 
 // TYPESCRIPT TYPES ///////////////////////////////////
@@ -310,6 +322,7 @@ module.exports = {
 	bannerProperties,
 	fontStylesMap,
 	globalProperties,
+	jsObject,
 	sassVariable,
 	successMessage,
 	styleBlock,

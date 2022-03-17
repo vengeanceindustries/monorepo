@@ -8,7 +8,12 @@ const { breakpoints, content, grid } = layout;
 const gridBase = grid.base;
 
 const fonts = require('../src/tokens/fonts.json');
-const { imports: fontImports, style: fontStyles, ...font } = fonts;
+const {
+	family: families,
+	imports: fontImports,
+	style: fontStyles,
+	...font
+} = fonts;
 
 // BANNER TOKENS //
 
@@ -36,7 +41,7 @@ Object.entries(breakpoints).forEach(([id, { name, width }]) => {
 		em: `${width / gridBase}em`,
 		rem: `${width / gridBase}rem`,
 	};
-	const below = `${(width - 1) / gridBase}em;`;
+	const below = `${(width - 1) / gridBase}em`;
 
 	bp[id] = data;
 	bp[device] = data;
@@ -62,7 +67,7 @@ ${unionType({ content })}
 // COLOR NAMES
 ${unionType({ color }, 'Global')}
 // FONT VALUES
-${unionType({ font }, 'Global')}
+${unionType({ font: { family: Object.keys(families), ...font } }, 'Global')}
 // FONT STYLES & NAMES
 ${unionType({
 	fontStyle: {

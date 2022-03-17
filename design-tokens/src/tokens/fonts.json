@@ -7,11 +7,16 @@
 		"RobotoMono": "Roboto+Mono:wght@400"
 	},
 	"family": {
-		"Oswald": "'Oswald', Arial, sans-serif",
-		"Poppins": "'Poppins', Arial, sans-serif",
-		"Roboto": "'Roboto', Arial, sans-serif",
-		"RobotoCondensed": "'Roboto Condensed', 'Roboto', Arial, sans-serif",
-		"RobotoMono": "'Roboto Mono', monospace"
+		"Oswald": ["'Oswald'", "Arial", "sans-serif"],
+		"Poppins": ["'Poppins'", "Arial", "sans-serif"],
+		"Roboto": ["'Roboto'", "Arial", "sans-serif"],
+		"RobotoCondensed": [
+			"'Roboto Condensed'",
+			"'Roboto'",
+			"Arial",
+			"sans-serif"
+		],
+		"RobotoMono": ["'Roboto Mono'", "monospace"]
 	},
 	"size": {
 		"h1": "3rem",

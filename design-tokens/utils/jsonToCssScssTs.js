@@ -52,26 +52,23 @@ function camelize(str, options = {}) {
 		});
 }
 
-function titleCase(str) {
-	return camelize(str, { titleCase: true });
-}
-
-const transformDefault = (key, val) => [key, val];
-
-const variableSass = (val) => `#{$${val}}`;
-const variableCss = (val) => `var(--$${val})`;
-
 function transformValue(val, useSassVar = false) {
-	let valTransformed = Array.isArray(val) ? `(${val})` : val;
+	if (Array.isArray(val)) {
+		return `(${val.join(', ')})`;
+	}
 
-	const matches =
-		typeof val === 'string' ? RegExp(/\{(.*?)\}/g).exec(val) : null;
+	let valTransformed = val;
+	const regex = RegExp(/\{(.*?)\}/g);
+
+	const matches = typeof val === 'string' ? val.match(regex) : null;
 	if (matches) {
-		const value = matches[1].replace(/\./g, '-');
-		const valFormatted = useSassVar
-			? variableSass(value)
-			: variableCss(value);
-		valTransformed = val.replace(matches[0], valFormatted);
+		matches.forEach((str) => {
+			const value = str.replace(/\./g, '-');
+			const valFormatted = useSassVar
+				? value.replace('{', '#{$')
+				: value.replace('{', 'var(--$').replace('}', '');
+			valTransformed = valTransformed.replace(str, valFormatted);
+		});
 	}
 	return valTransformed;
 }
@@ -92,14 +89,7 @@ function flattenToVariable(obj, prefix = '$', useSassVar = false) {
 			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
 		}
 
-		return (
-			all +
-			`${attr}: ${
-				Array.isArray(val)
-					? `(${val})`
-					: transformValue(val, useSassVar)
-			};\r`
-		);
+		return all + `${attr}: ${transformValue(val, useSassVar)};\r`;
 	}, '');
 }
 
@@ -235,9 +225,13 @@ function jsonToStyles(obj, space = '\t') {
 		warn('jsonToStyles', 'attempting to strigify a non-object', obj);
 		return `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
 	}
-	return JSON.stringify(obj, null, space)
-		.replace(/"([^"]+)":/g, '$1:')
-		.replace(/,\r/g, ';\r\n');
+	return (
+		JSON.stringify(obj, null, space)
+			// .replace(/"([^"]+)":/g, '$1:') // remove double-quotes around keys
+			.replace(/"([^"]+)"/g, '$1') // remove all double-quotes
+			.replace(/,\r/g, ';\r') // replace comma + line-ending with semi-colon + line-ending (Mac EOL)
+			.replace(/,\n/g, ';\n') // replace comma + line-ending with semi-colon + line-ending (Win/Unix EOL)
+	);
 }
 
 /**

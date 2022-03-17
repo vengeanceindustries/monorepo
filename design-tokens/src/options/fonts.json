@@ -1,0 +1,55 @@
+{
+	"imports": {
+		"Oswald": "Oswald:wght@700",
+		"Poppins": "Poppins:wght@700",
+		"Roboto": "Roboto:wght@300;500;700",
+		"RobotoCondensed": "Roboto+Condensed:wght@700",
+		"RobotoMono": "Roboto+Mono:wght@400"
+	},
+	"family": {
+		"Oswald": ["'Oswald'", "Arial", "sans-serif"],
+		"Poppins": ["'Poppins'", "Arial", "sans-serif"],
+		"Roboto": ["'Roboto'", "Arial", "sans-serif"],
+		"RobotoCondensed": [
+			"'Roboto Condensed'",
+			"'Roboto'",
+			"Arial",
+			"sans-serif"
+		],
+		"RobotoMono": ["'Roboto Mono'", "monospace"]
+	},
+	"size": {
+		"h1": "3rem",
+		"h2": "2.25rem",
+		"h3": "1.75rem",
+		"h4": "1.5rem",
+		"h5": "1.25rem",
+		"h6": "1.125rem",
+		"body": "1rem",
+		"label": "0.875rem",
+		"caption": "0.75rem",
+		"tiny": "0.625rem"
+	},
+	"weight": {
+		"light": 300,
+		"medium": 500,
+		"bold": 700
+	},
+	"lineHeight": {
+		"paragraph": 1.5,
+		"mid": 1.333333333,
+		"short": 1.2,
+		"heading": 1.1,
+		"tight": 1
+	},
+	"letterSpacing": {
+		"none": 0,
+		"some": "0.5px"
+	},
+	"textTransform": {
+		"none": "none",
+		"capitalize": "capitalize",
+		"lowercase": "lowercase",
+		"uppercase": "uppercase"
+	}
+}

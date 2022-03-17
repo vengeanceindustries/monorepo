@@ -3,47 +3,49 @@ const path = require('path');
 const extractPath = require('extract-svg-path');
 const svgToPath = require('path-that-svg').default;
 const SVGO = require('svgo');
-const plugins = [
-	{ cleanupAttrs: true },
-	{ cleanupEnableBackground: true },
-	{ cleanupIDs: true },
-	{ cleanupNumericValues: true },
-	{ collapseGroups: true },
-	{ convertColors: true },
-	{ convertPathData: true },
-	{ convertShapeToPath: true },
-	{ convertStyleToAttrs: true },
-	{ convertTransform: true },
-	{ mergePaths: true },
-	{ moveElemsAttrsToGroup: true },
-	{ moveGroupAttrsToElems: true },
-	{ removeAttrs: { attrs: `(class|data-name|stroke|fill})` } },
-	{ removeComments: true },
-	{ removeDesc: true },
-	{ removeDimensions: true },
-	{ removeDoctype: true },
-	{ removeEditorsNSData: true },
-	{ removeEmptyAttrs: true },
-	{ removeEmptyContainers: true },
-	{ removeEmptyText: true },
-	{ removeHiddenElems: true },
-	{ removeMetadata: true },
-	{ removeNonInheritableGroupAttrs: true },
-	{ removeRasterImages: false },
-	{ removeTitle: true },
-	{ removeUnknownsAndDefaults: true },
-	{ removeUnusedNS: true },
-	{ removeUselessDefs: true },
-	{ removeUselessStrokeAndFill: true },
-	{ removeViewBox: false },
-	{ removeXMLProcInst: true },
-	{ sortAttrs: true },
-];
-const svgo = () => new SVGO({ plugins });
+const svgo = () =>
+	new SVGO({
+		plugins: [
+			{ cleanupAttrs: true },
+			{ cleanupEnableBackground: true },
+			{ cleanupIDs: true },
+			{ cleanupNumericValues: true },
+			{ collapseGroups: true },
+			{ convertColors: true },
+			{ convertPathData: true },
+			{ convertShapeToPath: true },
+			{ convertStyleToAttrs: true },
+			{ convertTransform: true },
+			{ mergePaths: true },
+			{ moveElemsAttrsToGroup: true },
+			{ moveGroupAttrsToElems: true },
+			{ removeAttrs: { attrs: `(class|data-name|stroke|fill})` } },
+			{ removeComments: true },
+			{ removeDesc: true },
+			{ removeDimensions: true },
+			{ removeDoctype: true },
+			{ removeEditorsNSData: true },
+			{ removeEmptyAttrs: true },
+			{ removeEmptyContainers: true },
+			{ removeEmptyText: true },
+			{ removeHiddenElems: true },
+			{ removeMetadata: true },
+			{ removeNonInheritableGroupAttrs: true },
+			{ removeRasterImages: false },
+			{ removeTitle: true },
+			{ removeUnknownsAndDefaults: true },
+			{ removeUnusedNS: true },
+			{ removeUselessDefs: true },
+			{ removeUselessStrokeAndFill: true },
+			{ removeViewBox: false },
+			{ removeXMLProcInst: true },
+			{ sortAttrs: true },
+		],
+	});
 
-const { successMessage } = require('./jsonToCssScssTs');
+const { successMessage, warn } = require('./jsonToCssScssTs');
 
-const sourcePath = path.resolve(__dirname, '../src/icons/');
+const sourcePath = path.resolve(__dirname, '../src/svgs/');
 
 const distJson = path.join(__dirname, '../dist/icons.json');
 const distSprite = path.join(__dirname, '../dist/sprite.svg');
@@ -65,7 +67,7 @@ const icons =
 // read all files
 async function readFileData(file) {
 	const raw = fs.readFileSync(file, 'utf-8');
-	
+
 	const optimized = await svgo().optimize(raw, { path: file });
 
 	const data = await svgToPath(optimized.data);
@@ -87,8 +89,8 @@ function convertToSprite(allExports) {
 }
 
 async function convertAllSvgs() {
-	if (!icons.length) {
-		log(`convertAllSvgs: 👉 NO ICONS FOUND in ~${sourcePath}`);
+	if (!icons || !icons.length) {
+		warn('convertAllSvgs', `👉 NO ICONS FOUND in ~${sourcePath}`);
 		return;
 	}
 
@@ -103,19 +105,25 @@ async function convertAllSvgs() {
 
 	const iconList = [];
 
-	const {svgs, paths} = icons.reduce((all, icon, i) => {
-		const name = icon.replace('ic_', '');
-		iconList.push(name);
-		all.paths[name] = allPaths[i];
-		all.svgs[name] = allSVGs[i];
-		return all;
-	}, { paths: {}, svgs: {} });
+	const { svgs, paths } = icons.reduce(
+		(all, icon, i) => {
+			const name = icon.replace('ic_', '');
+			iconList.push(name);
+			all.paths[name] = allPaths[i];
+			all.svgs[name] = allSVGs[i];
+			return all;
+		},
+		{ paths: {}, svgs: {} }
+	);
 
-	const jsonFile = fs.writeFileSync(distJson, JSON.stringify(svgs, null, '\t').concat('\r'));
+	const jsonFile = fs.writeFileSync(
+		distJson,
+		JSON.stringify(svgs, null, '\t').concat('\r')
+	);
 	const spriteFile = fs.writeFileSync(distSprite, convertToSprite(paths));
 
 	if (!jsonFile && !spriteFile) {
-		successMessage('icons written to file! 📝');
+		successMessage('icons sprite SVG and JSON data written to file! 💾🖍');
 	}
 }
 

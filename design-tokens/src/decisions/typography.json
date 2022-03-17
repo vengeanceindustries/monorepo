@@ -1,0 +1,73 @@
+{
+	"heading-1": {
+		"font": "{font.weight.bold} {font.size.h1}/{font.lineHeight.heading} var(--font-family-heading)"
+	},
+	"heading-2": {
+		"font": "{font.weight.bold} {font.size.h2}/{font.lineHeight.heading} var(--font-family-heading)"
+	},
+	"heading-3": {
+		"font": "{font.weight.bold} {font.size.h3}/{font.lineHeight.heading} var(--font-family-heading)"
+	},
+	"heading-4": {
+		"font": "{font.weight.bold} {font.size.h4}/{font.lineHeight.heading} var(--font-family-heading)"
+	},
+	"heading-5": {
+		"font": "{font.weight.bold} {font.size.h5}/{font.lineHeight.heading} var(--font-family-heading)"
+	},
+	"heading-6": {
+		"font": "{font.weight.bold} {font.size.h6}/{font.lineHeight.short} var(--font-family-base)"
+	},
+
+	"body-1": {
+		"font": "{font.weight.bold} {font.size.h6}/{font.lineHeight.short} var(--font-family-base)"
+	},
+	"body-2": {
+		"font": "{font.size.body}/{font.lineHeight.paragraph} var(--font-family-base)"
+	},
+	"body-small": {
+		"font": "{font.size.tiny}/{font.lineHeight.paragraph} var(--font-family-base)"
+	},
+
+	"cta-1": {
+		"font-size": "{font.size.caption}",
+		"font-weight": "$font-weight-medium"
+	},
+	"cta-2": {
+		"font-size": "{font.size.tiny}",
+		"font-weight": "{font.weight.bold}",
+		"letter-spacing": "{font.letterSpacing.some}"
+	},
+
+	"input-text": {
+		"font": "{font.weight.medium} 1rem var(--font-family-input)"
+	},
+	"input-helper": {
+		"font-size": "{font.size.caption}",
+		"line-height": "{font.lineHeight.mid}"
+	},
+
+	"label": {
+		"font": "{font.weight.bold} {font.size.caption}/{font.lineHeight.mid} var(--font-family-base)",
+		"text-transform": "uppercase",
+		"letter-spacing": "{font.letterSpacing.some}"
+	},
+	"label-small": {
+		"font": "{font.weight.bold} {font.size.tiny}/{font.lineHeight.mid} var(--font-family-base)",
+		"text-transform": "uppercase",
+		"letter-spacing": "{font.letterSpacing.some}"
+	},
+
+	"caption": {
+		"font": "{font.size.caption}/{font.lineHeight.mid} var(--font-family-base)"
+	},
+
+	"number": {
+		"font": "{font.size.caption}/{font.lineHeight.mid} var(--font-family-mono)",
+		"text-transform": "uppercase"
+	},
+	"monospace": {
+		"font-family": "var(--font-family-mono)",
+		"font-weight": "{font.weight.light}",
+		"text-transform": "uppercase"
+	}
+}

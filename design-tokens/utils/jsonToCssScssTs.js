@@ -4,6 +4,7 @@ function log(text, ...args) {
 	console.log(`🎨 Design Tokens ${text}`, ...args);
 }
 
+/** Warn user when a generator has failed! ❌ */
 function warn(funcName, text, ...args) {
 	log(`${funcName} skipped: ❌ ${text}:`, ...args);
 }
@@ -100,12 +101,12 @@ const transformConfig = {
 	useSassVar: true,
 };
 
-function transformObj(items = {}, config = transformConfig) {
+function transformObj(obj = {}, config = transformConfig) {
 	const { depth, lineEnd, pre, useSassVar } = config;
 
 	const indent = '\t'.repeat(depth);
 
-	return Object.entries(items).reduce((all, [token, val]) => {
+	return Object.entries(obj).reduce((all, [token, val]) => {
 		let key = `${pre}${token}`;
 
 		if (!isTrueObject(val)) {
@@ -148,11 +149,15 @@ function flattenToSassMap(obj, prefix = '$') {
 	}, '');
 }
 
-function variablesMap(items = {}, deeplyNest = true) {
-	if (deeplyNest) {
-		return transformObj(items);
+function variablesMap(obj = {}, deeplyNest = true) {
+	if (!isTrueObject(obj)) {
+		warn('variablesMap', 'cannot create styles from non-object', obj);
+		return '';
 	}
-	return flattenToSassMap(items);
+	if (deeplyNest) {
+		return transformObj(obj);
+	}
+	return flattenToSassMap(obj);
 }
 
 // CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
@@ -203,6 +208,10 @@ function bannerProperties(obj) {
  * @param {object} obj nested object whose keys will be flattened to a snake-cased sass variable
  */
 function sassVariable(obj, useSassVar = true) {
+	if (!isTrueObject(obj)) {
+		warn('sassVariable', 'cannot create styles from non-object', obj);
+		return '';
+	}
 	return flattenToVariable(obj, '$', useSassVar);
 }
 
@@ -258,13 +267,24 @@ function styleBlock(obj, prefix = '.', join = '-') {
 }
 
 function fontStylesMap(obj) {
-	const typemap = obj;
-	return variablesMap({ typemap });
+	if (!isTrueObject(obj)) {
+		warn(
+			'fontStylesMap',
+			'cannot create variablesMap from non-object',
+			obj
+		);
+		return '';
+	}
+	return variablesMap({ typemap: obj });
 }
 
 // JAVASCRIPT TYPES ///////////////////////////////////
 
 function jsObject(obj, prefix = '') {
+	if (!isTrueObject(obj)) {
+		warn('jsObject', 'object expected', obj);
+		return '';
+	}
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		const name = `${prefix}${camelize(key)}`;
 
@@ -318,8 +338,9 @@ module.exports = {
 	globalProperties,
 	jsObject,
 	sassVariable,
-	successMessage,
 	styleBlock,
 	unionType,
 	variablesMap,
+	successMessage,
+	warn,
 };

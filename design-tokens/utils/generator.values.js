@@ -10,21 +10,21 @@ const {
 
 // GLOBAL TOKENS //
 
-const color = require('../src/tokens/colors.global.json');
-const layout = require('../src/tokens/layout.json');
+const color = require('../src/options/colors.global.json');
+const layout = require('../src/options/layout.json');
 const { breakpoints, content, grid } = layout;
 const gridBase = grid.base;
 
-const fonts = require('../src/tokens/fonts.json');
-const { imports: fontImports, style: fontStyles, ...font } = fonts;
+const fonts = require('../src/options/fonts.json');
+const { imports: fontImports, ...font } = fonts;
+const fontStyles = require('../src/decisions/typography.json');
 
-const button = require('../src/tokens/colors.buttons.json');
-const themes = require('../src/tokens/colors.themes.json');
+const { button, theme } = require('../src/decisions/colors.decisions.json');
 
 // BANNER TOKENS //
 
-const FL = require('../src/tokens/banner.FL.json');
-const KFL = require('../src/tokens/banner.KFL.json');
+const FL = require('../src/themes/banner.FL.json');
+const KFL = require('../src/themes/banner.KFL.json');
 const allBannerTokens = { FL, KFL };
 
 const fontFamily = FL.font.family;
@@ -93,11 +93,11 @@ ${styleBlock({ Button: button }, '.', '--')}
 
 const themeStyles = `
 // Theme style blocks 
-${styleBlock({ Theme: themes }, '.', '--')}
+${styleBlock({ Theme: theme }, '.', '--')}
 `;
 
-// scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
-// scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
+scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
+scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 
 module.exports = {
 	scss,

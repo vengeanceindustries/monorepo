@@ -32,7 +32,7 @@
 		"xlarge": 1680,
 		"fullWidth": "none"
 	},
-	"column": {
+	"columns": {
 		"auto": "auto",
 		"even": "even",
 		"shrink": "shrink",

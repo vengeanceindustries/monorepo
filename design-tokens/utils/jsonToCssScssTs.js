@@ -159,8 +159,6 @@ function flattenToSassMap(obj, prefix = '$') {
 			pre: '',
 		};
 
-		console.log({ attr }, typeOf(val), val);
-
 		const arr = isStringArray(val)
 			? `(${val.join(', ')})`
 			: `(\r${transformObj(val, config)})`;

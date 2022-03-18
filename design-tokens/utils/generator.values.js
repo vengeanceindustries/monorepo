@@ -12,7 +12,7 @@ const {
 
 const color = require('../src/options/colors.global.json');
 const layout = require('../src/options/layout.json');
-const { breakpoints, content, grid } = layout;
+const { breakpoints, columns, content, grid } = layout;
 const gridBase = grid.base;
 
 const fonts = require('../src/options/fonts.json');
@@ -67,6 +67,13 @@ Object.entries(content).forEach(([id, value]) => {
 	contentSize[id] = `${value / gridBase}em`;
 });
 
+const columnSize = {};
+
+Object.entries(columns).forEach(([id, value]) => {
+	columnSize[id] = value;
+	columnSize[value] = id;
+});
+
 let scss = `// auto-generated file - design system variables //
 
 // BREAKPOINTS //\r
@@ -77,7 +84,10 @@ ${variablesMap({ mqs }, false)}`;
 scss += `
 // CONTENT WIDTHS //\r
 ${variablesMap({ content: contentSize }, false)}
-${sassVariable({ content: contentSize })}`;
+${sassVariable({ content: contentSize })}
+// COLUMNS //\r
+${variablesMap({ columns: columnSize }, false)}
+${sassVariable({ columns: columnSize })}`;
 scss += `
 // SCSS FONTS //\r
 ${variablesMap({ font }, false)}

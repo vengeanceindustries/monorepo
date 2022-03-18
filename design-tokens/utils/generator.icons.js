@@ -123,7 +123,7 @@ async function convertAllSvgs() {
 	const spriteFile = fs.writeFileSync(distSprite, convertToSprite(paths));
 
 	if (!jsonFile && !spriteFile) {
-		successMessage('icons sprite SVG and JSON data written to file! 💾🖍');
+		successMessage('icons sprite SVG and JSON data written to file! 💾');
 	}
 }
 

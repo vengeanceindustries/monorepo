@@ -19,25 +19,25 @@ const SiteName = [FL.site, KFL.site];
 
 const fontFamily = FL.font.family;
 
-const breakpoint = { device: [], name: [], size: [] };
-
-Object.entries(breakpoints).forEach(([id, { name, width }]) => {
-	breakpoint.device.push(name);
-	breakpoint.name.push(id);
-	breakpoint.size.push(width);
-});
-
 const bp = {};
 const queries = {};
-Object.entries(breakpoints).forEach(([id, { name, width }]) => {
+const breakpoint = { device: [], name: [], size: [] };
+
+Object.entries(breakpoints).forEach(([id, { name, value }]) => {
+	// types
+	breakpoint.device.push(name);
+	breakpoint.name.push(id);
+	breakpoint.size.push(value);
+
+	// js data
+	const below = `${(value - 1) / gridBase}em`;
 	const device = name.replace('-', '_');
 	const data = {
-		value: width,
-		px: `${width}px`,
-		em: `${width / gridBase}em`,
-		rem: `${width / gridBase}rem`,
+		value,
+		px: `${value}px`,
+		em: `${value / gridBase}em`,
+		rem: `${value / gridBase}rem`,
 	};
-	const below = `${(width - 1) / gridBase}em`;
 
 	bp[id] = data;
 	bp[device] = data;
@@ -49,8 +49,7 @@ let data = `// auto-generated file - design system values //
 
 // BREAKPOINTS
 ${jsObject({ breakpoints: bp })}
-${jsObject({ queries })}
-`;
+${jsObject({ queries })}`;
 
 let types = `// auto-generated file - design system variables //
 

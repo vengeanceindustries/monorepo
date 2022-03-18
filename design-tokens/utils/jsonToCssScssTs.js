@@ -14,20 +14,27 @@ function successMessage(text, ...args) {
 	log(`🦄✨🎉 ${text}`, ...args);
 }
 
-function isTrueObject(obj) {
-	return obj && typeof obj === 'object' && !Array.isArray(obj);
+function isTrueObject(el) {
+	return el && typeof el === 'object' && !Array.isArray(el);
 }
-function isArray(obj) {
-	return obj && Array.isArray(obj);
-	// return obj && typeof obj === 'object' && Array.isArray(obj);
+function typeOf(el) {
+	return Array.isArray(el) ? 'array' : typeof el;
+}
+function isArray(el) {
+	return el && Array.isArray(el);
+}
+function isStringArray(el) {
+	return isArray(el) && !el.some((kid) => typeof kid !== 'string');
 }
 
-function hasChildObjects(obj) {
+function hasChildObjects(obj, includeArrays) {
 	if (!isTrueObject(obj)) {
 		return false;
 	}
 	const childVals = Object.values(obj);
-	return childVals.some((kid) => typeof kid === 'object');
+	return childVals.some((kid) =>
+		includeArrays ? typeof kid === 'object' : typeOf(kid) === 'object'
+	);
 }
 
 /* based off https://stackoverflow.com/a/2970667 */
@@ -54,7 +61,7 @@ function camelize(str, options = {}) {
 }
 
 function transformValue(val, useSassVar = false) {
-	if (Array.isArray(val)) {
+	if (isStringArray(val)) {
 		return `(${val.join(', ')})`;
 	}
 
@@ -134,7 +141,7 @@ function transformObj(obj = {}, config = transformConfig) {
 
 function flattenToSassMap(obj, prefix = '$') {
 	if (!isTrueObject(obj)) {
-		warn('flattenToVariable', 'cannot create styles from non-object', obj);
+		warn('flattenToSassMap', 'cannot create styles from non-object', obj);
 		return '';
 	}
 
@@ -145,7 +152,20 @@ function flattenToSassMap(obj, prefix = '$') {
 			return all + `${flattenToSassMap(val, `${attr}-`)}`;
 		}
 
-		return all + `${attr}: (\r${jsonToMap(val)});\r`;
+		const config = {
+			...transformConfig,
+			depth: 1,
+			lineEnd: ',\r',
+			pre: '',
+		};
+
+		console.log({ attr }, typeOf(val), val);
+
+		const arr = isStringArray(val)
+			? `(${val.join(', ')})`
+			: `(\r${transformObj(val, config)})`;
+
+		return all + `${attr}: ${arr};\r`;
 	}, '');
 }
 
@@ -215,21 +235,7 @@ function sassVariable(obj, useSassVar = true) {
 	return flattenToVariable(obj, '$', useSassVar);
 }
 
-function jsonToMap(obj, depth = 1) {
-	const config = {
-		...transformConfig,
-		depth,
-		lineEnd: ',\r',
-		pre: '',
-	};
-	return Array.isArray(obj) ? obj : transformObj(obj, config);
-}
-
 function jsonToStyles(obj, space = '\t') {
-	if (typeof obj === 'undefined') {
-		warn('jsonToStyles', 'cannot create styles from `undefined`');
-		return '';
-	}
 	if (!isTrueObject(obj)) {
 		warn('jsonToStyles', 'attempting to strigify a non-object', obj);
 		return `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
@@ -252,14 +258,17 @@ function styleBlock(obj, prefix = '.', join = '-') {
 		warn('styleBlock', 'cannot create styles from non-object', obj);
 		return '';
 	}
+
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		let selector = `${prefix}${key}`;
 
 		if (hasChildObjects(val)) {
 			return all + `${styleBlock(val, `${selector}${join}`)}`;
 		}
+
 		const styles = jsonToStyles(val);
 		if (!styles) {
+			warn('jsonToStyles', 'cannot create styles from', typeOf(val), val);
 			return all;
 		}
 		return all + `${selector} ${styles}\r\n`;
@@ -280,17 +289,20 @@ function fontStylesMap(obj) {
 
 // JAVASCRIPT TYPES ///////////////////////////////////
 
+function jsonToObject(val) {
+	return JSON.stringify(val, null, '\t').replace(/"([^"]+)":/g, '$1:');
+}
+
 function jsObject(obj, prefix = '') {
 	if (!isTrueObject(obj)) {
-		warn('jsObject', 'object expected', obj);
+		warn('jsObject', 'object expected, not', obj);
 		return '';
 	}
+
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		const name = `${prefix}${camelize(key)}`;
 
-		return (
-			all + `export const ${name} = ${JSON.stringify(val, null, '\t')};\r`
-		);
+		return all + `export const ${name} = ${jsonToObject(val)};\r`;
 	}, '');
 }
 
@@ -298,7 +310,12 @@ function jsObject(obj, prefix = '') {
 
 function createUnion(arr) {
 	if (!Array.isArray(arr)) {
-		warn('createUnion', 'cannot create union from non-Arrays', arr);
+		warn(
+			'createUnion',
+			'cannot create union from non-Arrays',
+			typeOf(arr),
+			arr
+		);
 		return '';
 	}
 	return arr
@@ -322,7 +339,7 @@ function unionType(obj, prefix = '') {
 		}
 		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
 
-		if (isTrueObject(val) && hasChildObjects(val)) {
+		if (isTrueObject(val) && hasChildObjects(val, true)) {
 			return all + `${unionType(val, `${typeName}`)}`;
 		}
 

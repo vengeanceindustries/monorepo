@@ -45,9 +45,9 @@ const bp = {};
 const mq = { at: {}, below: {} };
 const mqs = { down: {}, up: {} };
 
-Object.entries(breakpoints).forEach(([id, { name, width }]) => {
-	const px = `${width}px`;
-	const em = `${width / gridBase}em`;
+Object.entries(breakpoints).forEach(([id, { name, value }]) => {
+	const px = `${value}px`;
+	const em = `${value / gridBase}em`;
 	breakpointSizes.size[id] = em;
 	breakpointSizes.device[name] = em;
 	bp[name] = em;
@@ -61,6 +61,12 @@ Object.entries(breakpoints).forEach(([id, { name, width }]) => {
 	// breakpointList.mq[`for-below-${name}`] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
 });
 
+const contentSize = {};
+
+Object.entries(content).forEach(([id, value]) => {
+	contentSize[id] = `${value / gridBase}em`;
+});
+
 let scss = `// auto-generated file - design system variables //
 
 // BREAKPOINTS //\r
@@ -70,11 +76,13 @@ ${sassVariable({ bp, mq }, true)}
 ${variablesMap({ mqs }, false)}`;
 scss += `
 // CONTENT WIDTHS //\r
-${variablesMap({ content }, false)}
-${sassVariable({ content })}`;
+${variablesMap({ content: contentSize }, false)}
+${sassVariable({ content: contentSize })}`;
 scss += `
 // SCSS FONTS //\r
-${sassVariable({ font })}
+${variablesMap({ font }, false)}
+${sassVariable({ font })}`;
+scss += `
 // SCSS COLOR VALUES
 ${variablesMap({ color })}
 ${sassVariable({ color })}`;
@@ -88,16 +96,14 @@ const typemaps = `\r${fontStylesMap(fontStyles)}`;
 
 const buttons = `
 // Button style blocks
-${styleBlock({ Button: button }, '.', '--')}
-`;
+${styleBlock({ Button: button }, '.', '--')}`;
 
 const themeStyles = `
 // Theme style blocks 
-${styleBlock({ Theme: theme }, '.', '--')}
-`;
+${styleBlock({ Theme: theme }, '.', '--')}`;
 
-scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
 scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
+// scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
 
 module.exports = {
 	scss,

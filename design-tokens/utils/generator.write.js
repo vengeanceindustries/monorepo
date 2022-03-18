@@ -12,6 +12,6 @@ fs.ensureDirSync(path.resolve(__dirname, '../dist/'));
 fs.writeFileSync(path.resolve(__dirname, '../dist/index.js'), data);
 fs.writeFileSync(path.resolve(__dirname, '../dist/index.scss'), scss);
 fs.writeFileSync(path.resolve(__dirname, '../dist/index.d.ts'), types);
-successMessage('JS data, types and styles written to file! 💾🖍');
+successMessage('JS data, types and styles written to file! 💾');
 
 convertAllSvgs();

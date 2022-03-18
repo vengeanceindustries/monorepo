@@ -5,32 +5,63 @@
 	"breakpoints": {
 		"xs": {
 			"name": "phone",
-			"width": 320
+			"value": 320
 		},
 		"sm": {
 			"name": "tablet-portrait",
-			"width": 600
+			"value": 600
 		},
 		"md": {
 			"name": "tablet-landscape",
-			"width": 900
+			"value": 900
 		},
 		"lg": {
 			"name": "desktop",
-			"width": 1200
+			"value": 1200
 		},
 		"max": {
 			"name": "desktop-max",
-			"width": 1300
+			"value": 1300
 		}
 	},
 	"content": {
-		"width": {
-			"xsmall": 320,
-			"small": 640,
-			"medium": 960,
-			"large": 1300,
-			"xlarge": 1680
-		}
+		"xsmall": 320,
+		"small": 640,
+		"medium": 960,
+		"large": 1300,
+		"xlarge": 1680,
+		"fullWidth": "none"
+	},
+	"column": {
+		"auto": "auto",
+		"even": "even",
+		"shrink": "shrink",
+		"full": 1,
+		"half": 2,
+		"third": 3,
+		"quarter": 4,
+		"fifth": 5,
+		"sixth": 6,
+		"seventh": 7,
+		"eighth": 8,
+		"ninth": 9,
+		"tenth": 10
+	},
+	"spacing": {
+		"0": 0,
+		"0.25": "0.25rem",
+		"0.5": "0.5rem",
+		"0.75": "0.75rem",
+		"1": "1rem",
+		"1.25": "1.25rem",
+		"1.5": "1.5rem",
+		"1.75": "1.75rem",
+		"2": "2rem",
+		"2.5": "2.5rem",
+		"3": "3rem",
+		"3.5": "3.5rem",
+		"4": "4rem",
+		"5": "5rem",
+		"6": "6rem"
 	}
 }

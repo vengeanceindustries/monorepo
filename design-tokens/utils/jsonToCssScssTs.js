@@ -60,9 +60,9 @@ function camelize(str, options = {}) {
 		});
 }
 
-function transformValue(val, useSassVar = false) {
+function transformValue(val, inCustomVar = false, useSassVar = false) {
 	if (isStringArray(val)) {
-		return `(${val.join(', ')})`;
+		return inCustomVar ? val.join(', ') : `(${val.join(', ')})`;
 	}
 
 	let valTransformed = val;
@@ -74,7 +74,7 @@ function transformValue(val, useSassVar = false) {
 			const value = str.replace(/\./g, '-');
 			const valFormatted = useSassVar
 				? value.replace('{', '#{$')
-				: value.replace('{', 'var(--$').replace('}', '');
+				: value.replace('{', 'var(--').replace('}', '');
 			valTransformed = valTransformed.replace(str, valFormatted);
 		});
 	}
@@ -97,7 +97,14 @@ function flattenToVariable(obj, prefix = '$', useSassVar = false) {
 			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
 		}
 
-		return all + `${attr}: ${transformValue(val, useSassVar)};\r`;
+		return (
+			all +
+			`${attr}: ${transformValue(
+				val,
+				prefix.includes('--'),
+				useSassVar
+			)};\r`
+		);
 	}, '');
 }
 
@@ -119,7 +126,11 @@ function transformObj(obj = {}, config = transformConfig) {
 		if (!isTrueObject(val)) {
 			return (
 				all +
-				`${indent}${key}: ${transformValue(val, useSassVar)}${lineEnd}`
+				`${indent}${key}: ${transformValue(
+					val,
+					pre.includes('--'),
+					useSassVar
+				)}${lineEnd}`
 			);
 		}
 
@@ -176,6 +187,37 @@ function variablesMap(obj = {}, deeplyNest = true) {
 		return transformObj(obj);
 	}
 	return flattenToSassMap(obj);
+}
+
+function fontFamilyReference(obj) {
+	if (!isTrueObject(obj)) {
+		warn(
+			'fontFamilyReference',
+			'was expecting an object, not',
+			typeOf(obj),
+			obj
+		);
+		return obj;
+	}
+
+	return Object.entries(obj).reduce((all, [type, family]) => {
+		// all[type] = `{font.family.${family}}`;
+		all[type] = `var(--font-family-${family})`;
+		return all;
+	}, {});
+}
+
+function updateFontFamilyReferences(obj) {
+	if (!isTrueObject(obj)) {
+		return obj;
+	}
+	return Object.entries(obj).reduce((all, [key, val]) => {
+		all[key] =
+			key === 'family'
+				? fontFamilyReference(val)
+				: updateFontFamilyReferences(val);
+		return all;
+	}, {});
 }
 
 // CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
@@ -349,12 +391,14 @@ function unionType(obj, prefix = '') {
 
 module.exports = {
 	bannerProperties,
+	fontFamilyReference,
 	fontStylesMap,
 	globalProperties,
 	jsObject,
 	sassVariable,
 	styleBlock,
 	unionType,
+	updateFontFamilyReferences,
 	variablesMap,
 	successMessage,
 	warn,

@@ -48,12 +48,12 @@
 
 	"label": {
 		"font": "{font.weight.bold} {font.size.caption}/{font.lineHeight.mid} var(--font-family-base)",
-		"text-transform": "uppercase",
+		"text-transform": "{font.textTransform.uppercase}",
 		"letter-spacing": "{font.letterSpacing.some}"
 	},
 	"label-small": {
 		"font": "{font.weight.bold} {font.size.tiny}/{font.lineHeight.mid} var(--font-family-base)",
-		"text-transform": "uppercase",
+		"text-transform": "{font.textTransform.uppercase}",
 		"letter-spacing": "{font.letterSpacing.some}"
 	},
 
@@ -63,11 +63,11 @@
 
 	"number": {
 		"font": "{font.size.caption}/{font.lineHeight.mid} var(--font-family-mono)",
-		"text-transform": "uppercase"
+		"text-transform": "{font.textTransform.uppercase}"
 	},
 	"monospace": {
 		"font-family": "var(--font-family-mono)",
 		"font-weight": "{font.weight.light}",
-		"text-transform": "uppercase"
+		"text-transform": "{font.textTransform.uppercase}"
 	}
 }

@@ -1,5 +1,11 @@
-import { allBannerTokens, fontImports } from './generator.values';
 import { SiteName } from 'design-tokens';
+
+const fonts = require('../src/options/fonts.json');
+const fontImports = fonts.imports;
+
+const FL = require('../src/themes/banner.FL.json');
+const KFL = require('../src/themes/banner.KFL.json');
+const allBannerTokens = { FL, KFL };
 
 function generateFontLink(families: string): string {
 	return (

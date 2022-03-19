@@ -3,10 +3,9 @@
 	"name": "Foot Locker",
 	"font": {
 		"family": {
-			"base": "var(--font-family-Roboto)",
-			"heading": "var(--font-family-Roboto)",
-			"mono": "var(--font-family-RobotoMono)",
-			"input": "system-ui, var(--font-family-base)"
+			"base": "Roboto",
+			"heading": "Roboto",
+			"mono": "RobotoMono"
 		}
 	},
 	"color": {

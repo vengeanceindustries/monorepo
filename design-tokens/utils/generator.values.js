@@ -1,10 +1,11 @@
 const {
 	bannerProperties,
+	fontFamilyReference,
 	globalProperties,
 	fontStylesMap,
 	sassVariable,
 	styleBlock,
-	unionType,
+	updateFontFamilyReferences,
 	variablesMap,
 } = require('./jsonToCssScssTs');
 
@@ -16,7 +17,7 @@ const { breakpoints, columns, content, grid } = layout;
 const gridBase = grid.base;
 
 const fonts = require('../src/options/fonts.json');
-const { imports: fontImports, ...font } = fonts;
+const { imports, ...font } = fonts;
 const fontStyles = require('../src/decisions/typography.json');
 
 const { button, theme } = require('../src/decisions/colors.decisions.json');
@@ -25,9 +26,8 @@ const { button, theme } = require('../src/decisions/colors.decisions.json');
 
 const FL = require('../src/themes/banner.FL.json');
 const KFL = require('../src/themes/banner.KFL.json');
-const allBannerTokens = { FL, KFL };
 
-const fontFamily = FL.font.family;
+const bannerCustomProperties = updateFontFamilyReferences({ FL, KFL });
 
 // FL is default root styles
 const globalCustomProperties = {
@@ -35,7 +35,10 @@ const globalCustomProperties = {
 	name: FL.name,
 	color: FL.color,
 	// color: {...color, ...FL.color},
-	font: { family: { ...font.family, ...fontFamily } },
+	font: {
+		...font,
+		family: { ...font.family, ...fontFamilyReference(FL.font.family) },
+	},
 	button: FL.theme.light.button,
 	theme: FL.theme,
 };
@@ -96,11 +99,12 @@ scss += `
 // SCSS COLOR VALUES
 ${variablesMap({ color })}
 ${sassVariable({ color })}`;
+
 scss += `
 // GLOBAL CSS VARIABLES
 ${globalProperties(globalCustomProperties)}
 // BANNER CSS VARS
-${bannerProperties(allBannerTokens)}`;
+${bannerProperties(bannerCustomProperties)}`;
 
 const typemaps = `\r${fontStylesMap(fontStyles)}`;
 
@@ -117,6 +121,4 @@ scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 
 module.exports = {
 	scss,
-	allBannerTokens,
-	fontImports,
 };

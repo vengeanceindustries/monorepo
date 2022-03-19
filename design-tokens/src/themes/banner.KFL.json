@@ -3,9 +3,9 @@
 	"name": "Kids Foot Locker",
 	"font": {
 		"family": {
-			"base": "var(--font-family-Roboto)",
-			"heading": "var(--font-family-Poppins)",
-			"mono": "var(--font-family-RobotoMono)"
+			"base": "Roboto",
+			"heading": "Poppins",
+			"mono": "RobotoMono"
 		}
 	},
 	"color": {

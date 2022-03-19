@@ -36,5 +36,20 @@ $typemap: () !default;
 		@include styleMap($props);
 	} @else {
 		@warn 'No key "#{$name}" in map $typemap. HINT: key should not start with "font-"';
+		@warn $typemap;
 	}
+}
+
+@mixin typography (
+	$font-size: var(--font-size-body),
+	$font-weight: var(--font-weight-medium),
+	$lineHeight: var(--font-lineHeight-paragraph),
+	$font-family: var(--font-family-base),
+	$letterSpacing: var(--font-letterSpacing-none),
+	$textTransform: var(--font-textTransform-none)
+) {
+	// font: #{$font-weight-bold} #{$font-size-h1}/#{$font-lineHeight-heading} var(--font-family-heading);
+	font: #{$font-weight} #{$font-size}/#{$lineHeight} #{$font-family};
+	letter-spacing: $letterSpacing;
+	text-transform: $textTransform;
 }

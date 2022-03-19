@@ -8,7 +8,7 @@ const { breakpoints, content, grid } = layout;
 const gridBase = grid.base;
 
 const fonts = require('../src/options/fonts.json');
-const { family: families, imports: fontImports, ...font } = fonts;
+const { family: families, imports, ...font } = fonts;
 const fontStyles = require('../src/decisions/typography.json');
 
 // BANNER TOKENS //
@@ -17,7 +17,8 @@ const FL = require('../src/themes/banner.FL.json');
 const KFL = require('../src/themes/banner.KFL.json');
 const SiteName = [FL.site, KFL.site];
 
-const fontFamily = FL.font.family;
+const family = Object.keys(families);
+const fontFamilyBanner = FL.font.family;
 
 const bp = {};
 const queries = {};
@@ -62,12 +63,12 @@ ${unionType({ content })}
 // COLOR NAMES
 ${unionType({ color }, 'Global')}
 // FONT VALUES
-${unionType({ font: { family: Object.keys(families), ...font } }, 'Global')}
+${unionType({ font: { family, ...font } }, 'Global')}
 // FONT STYLES & NAMES
 ${unionType({
 	fontStyle: {
 		name: Object.keys(fontStyles),
-		family: fontFamily,
+		family: fontFamilyBanner,
 	},
 })}`;
 

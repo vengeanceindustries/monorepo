@@ -67,7 +67,6 @@
 	},
 	"monospace": {
 		"font-family": "var(--font-family-mono)",
-		"font-weight": "{font.weight.light}",
-		"text-transform": "{font.textTransform.uppercase}"
+		"font-weight": "{font.weight.light}"
 	}
 }

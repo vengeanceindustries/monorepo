@@ -4,7 +4,7 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"ignore-main": "index.html",
-	"main": "utils/generator.write.js",
+	"main": "dist/index",
 	"scripts": {
 		"start": "parcel index.html --open",
 		"prestart": "yarn run generate",

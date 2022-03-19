@@ -1,11 +1,6 @@
 {
 	"compilerOptions": {
 		"baseUrl": ".",
-		"paths": {
-			"design-tokens": ["../design-tokens/"],
-			"component-library": ["../component-library/"],
-			"UI-LIB": ["../component-library/"]
-		},
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
@@ -16,9 +11,23 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"strict": false,
-		"target": "es5"
+		"target": "es5",
+		"paths": {
+			"design-tokens": ["./design-tokens/"],
+			"component-library": ["./component-library/"],
+			"UI-LIB": ["./component-library/"]
+		}
 	},
-	"exclude": [
-		"**/dist/**/*"
-	]
+	"references": [
+		{
+			"path": "./design-tokens"
+		},
+		{
+			"path": "./component-library"
+		},
+		{
+			"path": "./frontend"
+		}
+	],
+	"exclude": ["**/dist/*", "**/tests/*"]
 }

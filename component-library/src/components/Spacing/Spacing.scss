@@ -1,26 +1,48 @@
 $spacingBase: 0.5rem;
 
-$properties: ('bottom', 'left', 'right', 'top');
-
 $spacingSizes: (0, 1, 2, 3, 4, 5, 6);
 
-// .margin {
-// 	@each ($property in $properties) {
-// 		@each ($size in $spacingSizes) {
-// 			&#{capitalize($property)} {
-// 				margin-#{$property}: #{$size * $spacingBase};
-// 			}
-// 		}
-// 	}
-// }
-.marginBottom {
-	&-1 {
-		margin-bottom: #{1 * $spacingBase};
+$properties: ('bottom', 'left', 'right', 'top');
+
+@function capitalize($string) {
+	@return to-upper-case(str-slice($string, 1, 1)) + str-slice($string, 2);
+}
+
+[class*='margin'],
+[class*='padding'] {
+	outline: 1px dotted red;
+}
+
+.margin {
+	// shorthand property
+	@each $size in $spacingSizes {
+		&\:#{$size} {
+			margin: #{$size * $spacingBase};
+		}
 	}
-	&-2 {
-		margin-bottom: #{2 * $spacingBase};
+	// longhand properties
+	@each $property in $properties {
+		@each $size in $spacingSizes {
+			&#{capitalize($property)}\:#{$size} {
+				margin-#{$property}: #{$size * $spacingBase};
+			}
+		}
 	}
-	&-3 {
-		margin-bottom: #{2 * $spacingBase};
+}
+
+.padding {
+	// shorthand property
+	@each $size in $spacingSizes {
+		&\:#{$size} {
+			padding: #{$size * $spacingBase};
+		}
+	}
+	// longhand properties
+	@each $property in $properties {
+		@each $size in $spacingSizes {
+			&#{capitalize($property)}\:#{$size} {
+				padding-#{$property}: #{$size * $spacingBase};
+			}
+		}
 	}
 }

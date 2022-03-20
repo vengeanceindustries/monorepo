@@ -18,16 +18,5 @@
 			"UI-LIB": ["./component-library/"]
 		}
 	},
-	"references": [
-		{
-			"path": "./design-tokens"
-		},
-		{
-			"path": "./component-library"
-		},
-		{
-			"path": "./frontend"
-		}
-	],
 	"exclude": ["**/dist/*", "**/tests/*"]
 }

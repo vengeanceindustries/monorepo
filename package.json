@@ -6,6 +6,7 @@
 		"frontend"
 	],
 	"scripts": {
-		"generate": "node ./design-tokens/utils/generator.write.js"
+		"tokens": "cd design-tokens && yarn run generate",
+		"storybook": "cd component-library && yarn run start"
 	}
 }

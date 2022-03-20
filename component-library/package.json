@@ -4,10 +4,11 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "build-storybook -s",
-		"prebuild": "node ../design-tokens/utils/generator.write.js",
+		"prebuild": "yarn run build:tokens",
 		"start": "start-storybook -p 6006",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"build:tokens": "cd design-tokens && yarn run generate"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.16.0",

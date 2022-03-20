@@ -22,7 +22,7 @@ SpacingAroundButton.args = {
 
 export const Padding1 = Template.bind({});
 Padding1.args = {
-	children: 'Foo bar',
+	children: 'Foo? bar',
 	padding: 1,
 };
 

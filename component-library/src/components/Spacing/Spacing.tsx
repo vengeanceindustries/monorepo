@@ -4,51 +4,65 @@ import './Spacing.scss';
 
 export type SpacingSize = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-export interface SpacingProps {
+export interface MarginPaddingProps {
 	// extends React.CSSProperties {
-	children: React.ReactNode;
 	// margin properties
 	margin?: SpacingSize;
+	marginTop?: SpacingSize;
+	marginRight?: SpacingSize;
 	marginBottom?: SpacingSize;
 	marginLeft?: SpacingSize;
-	marginRight?: SpacingSize;
-	marginTop?: SpacingSize;
 	// padding properties
 	padding?: SpacingSize;
+	paddingTop?: SpacingSize;
+	paddingRight?: SpacingSize;
 	paddingBottom?: SpacingSize;
 	paddingLeft?: SpacingSize;
-	paddingRight?: SpacingSize;
-	paddingTop?: SpacingSize;
 }
+export type SpacingProps = React.PropsWithChildren<MarginPaddingProps>;
+
+// const deps = [ margin, marginBottom, marginLeft, marginRight, marginTop, padding, paddingBottom, paddingLeft, paddingRight, paddingTop, ];
 
 function propToClassName(key: string, val: string | number): string {
 	return `${key}:${val}`;
 }
 
-export default function Spacing({
-	children,
-	margin,
-	padding,
-	...props
-}: SpacingProps): JSX.Element {
-	const entries = Object.entries(props);
-
+/**
+ * create classNames from margin, padding shorthand properties
+ */
+function propsToClassName({ margin, padding, ...rest }: SpacingProps): string {
 	// create classnames for `margin` and `padding` shorthand properties, if they exist
 	const shorthands = Object.entries({ margin, padding })
-		.map(([key, val]) => val !== undefined && propToClassName(key, val))
+		.map(([key, val]) => !!val && propToClassName(key, val))
 		.filter(Boolean)
 		.join(' ');
 
-	const className = entries.reduce((all, [key, val]) => {
-		// include any margin-area/padding-area properties if the shorthand property isn't being used
-		if (
-			(!margin && key.includes('margin')) ||
-			(!padding && key.includes('padding'))
-		) {
-			return `${all} ${propToClassName(key, val)}`;
-		}
-		return all;
-	}, shorthands);
+	console.log({ margin, padding, ...rest });
+	// include any margin-area/padding-area properties if the shorthand property isn't being used
+	const longhands = Object.entries(rest)
+		.map(([key, val]) => {
+			if (
+				(key.includes('margin') && !margin) ||
+				(key.includes('padding') && !padding)
+			) {
+				return propToClassName(key, val);
+			}
+			return null;
+		})
+		.filter(Boolean)
+		.join(' ');
+
+	return `${shorthands} ${longhands}`.trim();
+}
+
+/**
+ * add spacing to anything without adding styles
+ */
+export default function Spacing({
+	children,
+	...props
+}: SpacingProps): JSX.Element {
+	const className = propsToClassName(props);
 
 	return <div className={className}>{children}</div>;
 }

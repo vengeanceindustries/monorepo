@@ -1,0 +1,53 @@
+// NUMBER FUNCTIONS //
+
+$font_size_base: 16;
+
+/// Remove the unit of a length
+/// @param {Number} $number - Number to remove unit from
+/// @return {Number} - Unitless number
+@function strip-unit($number) {
+	@if type-of($number) == 'number' and not unitless($number) {
+		@return $number / ($number * 0 + 1);
+	}
+	@return $number;
+}
+
+@function ems-to-rems($em) {
+	@return strip-unit($em) * 1rem;
+}
+
+@function px-to-rems($px, $fontSize: $font_size_base) {
+	@debug 'px-to-rems: #{strip-unit($px / $fontSize)}';
+	@return strip-unit($px / $fontSize) * 1rem;
+}
+
+@function px-to-ems($px, $fontSize: $font_size_base) {
+	@return strip-unit($px / $fontSize) * 1em;
+}
+
+// STRING FUNCTIONS //
+
+@function title-case($str) {
+	@return to-upper-case(str-slice($str, 1, 1)) + str-slice($str, 2);
+}
+
+/// convert string to camelCase
+/// lifted from https://gist.github.com/pascalduez/10011785
+@function camelize($string) {
+	$progress: $string;
+	$result: '';
+
+	@while str-length($progress) > 0 {
+		$char: str-slice($progress, 1, 1);
+
+		@if ($char == '-' or $char == ' ') {
+			$progress: to-upper-case(str-slice($progress, 2, 2)) +
+				str-slice($progress, 3);
+		} @else {
+			$result: $result + $char;
+			$progress: str-slice($progress, 2);
+		}
+	}
+
+	@return $result;
+}

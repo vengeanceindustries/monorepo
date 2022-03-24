@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './Spacing.scss';
-
 export type SpacingSize = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface MarginPaddingProps {

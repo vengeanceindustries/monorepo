@@ -1,0 +1,95 @@
+// Base Styles
+$FormInput--height: px-to-ems(44px);
+$Button--height: 2.75rem;
+$Button--borderWidth: 1px;
+$Button--borderRadius: 2px;
+$Button--lineHeight: 1;
+$Button--textTransform: uppercase !default;
+$Button--fontName: 'label';
+$Button--fontSize: typemaps-get-font-attr($Button--fontName) or px-to-rems(14px); // Sass uses 'or' for fallback
+$Button--fontSize: 0.875rem; // px-to-rems(14px);
+@debug '$Button--fontSize: #{$Button--fontSize}';
+$Button--fontHeight: $Button--lineHeight * $Button--fontSize;
+
+$Button--paddingV: ($Button--height - $Button--fontHeight)/2 -
+	px-to-rems($Button--borderWidth);
+$Button--paddingH: 1.25rem;
+
+$Button-short--height: 2rem;
+$Button-short--paddingV: 0.5rem;
+$Button-short--paddingH: 0.75rem;
+
+$Button-sm--paddingH: 0.5rem;
+$Button-sm--fontSize: 0.75rem; // px-to-rems(12px);
+$Button-sm--lineHeight: 1;
+$Button-sm--fontHeight: $Button-sm--lineHeight * $Button-sm--fontSize;
+
+$Button_disabled--color: rgba($color-woodsmoke, 0.3);
+$Button_disabled--borderColor: $color-alto; // TO DO: change to transparent
+$Button_disabled--backgroundColor: $color-wild_sand;
+
+// using MIXINS, never PLACEHOLDERS, because extending is the devil
+
+@mixin Button_base {
+	margin: 0;
+	position: relative;
+	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: $Button--lineHeight;
+	border: #{$Button--borderWidth} solid;
+	border-radius: $Button--borderRadius;
+	vertical-align: middle;
+	text-decoration: none;
+	text-align: center;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: box-shadow 0.25s;
+}
+
+// SIZES //
+
+@mixin Button_size_normal {
+	@include font($Button--fontName);
+	line-height: $Button--lineHeight;
+	min-height: $Button--height;
+	padding: #{$Button--paddingV} #{$Button--paddingH};
+	text-transform: $Button--textTransform;
+}
+
+@mixin Button_size_mobile {
+	font-size: $Button-sm--fontSize;
+	line-height: $Button-sm--lineHeight;
+	padding: 0 $Button-sm--paddingH;
+}
+
+@mixin Button_size_small {
+	letter-spacing: 0;
+	@include font('caption');
+	min-height: px-to-rems(27);
+	padding: 0.25rem 0.5rem;
+	text-transform: none;
+}
+
+// STATES //
+
+@mixin Button_state_focus {
+	outline: none;
+	transform: scale(1.05);
+}
+
+@mixin Button_state_disabled {
+	cursor: default;
+	color: $Button_disabled--color;
+	border-color: $Button_disabled--borderColor;
+	background-color: $Button_disabled--backgroundColor;
+	box-shadow: none;
+}
+
+// MISC / Legacy //
+
+@mixin Button_minWidth {
+	min-width: 4.875rem; // 78px, but WHY
+	max-width: 100%;
+}

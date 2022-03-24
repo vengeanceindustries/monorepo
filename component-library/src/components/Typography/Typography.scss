@@ -1,0 +1,77 @@
+body {
+	@include font('body-2');
+	// color: $type_body_font_color;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+@include typeClasses();
+// .font,
+// %font {
+// 	// loops through `$typemaps` map to generate font utils
+// 	// ie .font-heading-1 etc
+// 	@include typeset($typemaps);
+// }
+
+// h1,
+// .font-heading-1 {
+// 	@include font('heading-1');
+// }
+// h2,
+// .font-heading-2 {
+// 	@include font('heading-1');
+// }
+// h3,
+// .font-heading-3 {
+// 	@extend %font-heading-3 !optional;
+// }
+// h4,
+// .font-heading-4 {
+// 	@extend %font-heading-4 !optional;
+// }
+// h5,
+// .font-heading-5 {
+// 	@extend %font-heading-5 !optional;
+// }
+// h6,
+// .font-heading-6 {
+// 	@extend %font-body-1 !optional;
+// }
+
+pre {
+	@include font('monospace');
+	// font-family: $font_family_mono;
+}
+
+// Utils //
+
+.textAlign-left {
+	text-align: left !important;
+}
+.textAlign-center {
+	text-align: center !important;
+}
+.textAlign-right {
+	text-align: right !important;
+}
+
+$verticalAlign: (
+	baseline,
+	sub,
+	super,
+	text-top,
+	text-bottom,
+	middle,
+	top,
+	bottom
+);
+
+/// creates utils for all possible string values of vertical-align, camelizing property value
+/// @example .verticalAlign-textBottom { vertical-align: text-bottom; }
+.verticalAlign {
+	@each $align in $verticalAlign {
+		&-#{camelize($align)} {
+			vertical-align: $align !important;
+		}
+	}
+}

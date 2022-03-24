@@ -1,3 +1,33 @@
-button {
-  font-size: 60px;
+@import './Button.mixins';
+
+.Button {
+	@include Button_base;
+	@include Button_size_normal;
+
+	&.focus,
+	&:focus {
+		@include Button_state_focus;
+	}
+	&.disabled,
+	&:disabled {
+		@include Button_state_disabled;
+	}
+
+	// include smaller mobile size automatically
+	// @include mq_for_below_tablet_portrait {
+	// 	&:not(.Button--small) {
+	// 		@include Button_size_mobile;
+	// 	}
+	// }
+
+	&--primary {
+		background-color: var(--button-primary-background-color);
+		border-color: var(--button-primary-border-color);
+		color: var(--button-primary-color);
+	}
+	&--secondary {
+		background-color: var(--button-secondary-background-color);
+		border-color: var(--button-secondary-border-color);
+		color: var(--button-secondary-color);
+	}
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-// import './Button.css';
 
 export interface ButtonProps {
 	label: string;
@@ -17,7 +16,7 @@ export default function Button({
 			className={[
 				'Button',
 				`Button--${primary ? 'primary' : 'secondary'}`,
-				`Button--${size}`,
+				size ? `Button--${size}` : '',
 			].join(' ')}
 			type="button"
 		>

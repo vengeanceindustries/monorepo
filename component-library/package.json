@@ -6,9 +6,10 @@
 		"build": "build-storybook -s",
 		"prebuild": "yarn run build:tokens",
 		"start": "start-storybook -p 6006",
+		"prestart": "yarn run build:tokens",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"build:tokens": "cd design-tokens && yarn run generate"
+		"build:tokens": "cd ../design-tokens && yarn run generate"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

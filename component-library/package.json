@@ -10,6 +10,10 @@
 		"eject": "react-scripts eject",
 		"build:tokens": "cd design-tokens && yarn run generate"
 	},
+	"dependencies": {
+		"cross-env": "5.0.5",
+		"design-tokens": "1.0.0"
+	},
 	"devDependencies": {
 		"@babel/core": "^7.16.0",
 		"@babel/preset-env": "^7.16.4",
@@ -27,8 +31,6 @@
 		"@types/react": "^17.0.34",
 		"babel-jest": "^27.3.1",
 		"babel-loader": "^8.2.3",
-		"cross-env": "5.0.5",
-		"design-tokens": "1.0.0",
 		"css-loader": "^6.5.1",
 		"html-webpack-plugin": "^5.5.0",
 		"identity-obj-proxy": "^3.0.0",

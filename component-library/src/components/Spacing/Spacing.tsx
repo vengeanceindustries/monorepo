@@ -1,6 +1,5 @@
 import React from 'react';
-
-export type SpacingSize = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+import { SpacingSize } from 'design-tokens';
 
 export interface MarginPaddingProps {
 	// extends React.CSSProperties {
@@ -35,7 +34,6 @@ function propsToClassName({ margin, padding, ...rest }: SpacingProps): string {
 		.filter(Boolean)
 		.join(' ');
 
-	console.log({ margin, padding, ...rest });
 	// include any margin-area/padding-area properties if the shorthand property isn't being used
 	const longhands = Object.entries(rest)
 		.map(([key, val]) => {

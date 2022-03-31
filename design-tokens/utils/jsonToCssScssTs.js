@@ -333,7 +333,7 @@ function jsonToObject(val) {
 	return JSON.stringify(val, null, '\t').replace(/"([^"]+)":/g, '$1:');
 }
 
-function jsObject(obj, prefix = '') {
+function jsObject(obj, prefix = '', lineEnd = ';\r') {
 	if (!isTrueObject(obj)) {
 		warn('jsObject', 'object expected, not', obj);
 		return '';
@@ -342,8 +342,12 @@ function jsObject(obj, prefix = '') {
 	return Object.entries(obj).reduce((all, [key, val]) => {
 		const name = `${prefix}${camelize(key)}`;
 
-		return all + `export const ${name} = ${jsonToObject(val)};\r`;
+		return all + `export const ${name} = ${jsonToObject(val)}${lineEnd}`;
 	}, '');
+}
+
+function tsObject(obj) {
+	return jsObject(obj, '', ` as const;\r\r`);
 }
 
 // TYPESCRIPT TYPES ///////////////////////////////////
@@ -395,6 +399,7 @@ module.exports = {
 	fontStylesMap,
 	globalProperties,
 	jsObject,
+	tsObject,
 	sassVariable,
 	styleBlock,
 	unionType,

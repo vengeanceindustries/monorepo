@@ -5,7 +5,8 @@
 		"family": {
 			"base": "Roboto",
 			"heading": "Roboto",
-			"mono": "RobotoMono"
+			"mono": "RobotoMono",
+			"input": ["system-ui", "var(--font-family-base)"]
 		}
 	},
 	"color": {

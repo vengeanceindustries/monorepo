@@ -16,8 +16,7 @@
 			"Arial",
 			"sans-serif"
 		],
-		"RobotoMono": ["'Roboto Mono'", "monospace"],
-		"input": ["system-ui", "var(--font-family-base)"]
+		"RobotoMono": ["'Roboto Mono'", "monospace"]
 	},
 	"size": {
 		"h1": "3rem",

@@ -1,9 +1,11 @@
 {
+	"exclude": ["**/tests/*"],
 	"compilerOptions": {
 		"baseUrl": ".",
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
+		"noUnusedLocals": true,
 		"jsx": "react",
 		"module": "ESNext",
 		"moduleResolution": "node",
@@ -17,6 +19,5 @@
 			"component-library": ["./component-library/"],
 			"UI-LIB": ["./component-library/"]
 		}
-	},
-	"exclude": ["**/dist/*", "**/tests/*"]
+	}
 }

@@ -6,7 +6,7 @@
 		"frontend"
 	],
 	"scripts": {
-		"tokens": "cd design-tokens && yarn run generate",
+		"build:tokens": "cd design-tokens && yarn run generate",
 		"storybook": "cd component-library && yarn run start"
 	}
 }

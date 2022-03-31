@@ -98,7 +98,8 @@ ${sassVariable({ font })}`;
 scss += `
 // SCSS COLOR VALUES
 ${variablesMap({ color })}
-${sassVariable({ color })}`;
+${sassVariable({ color })}
+${sassVariable(color)}`;
 
 scss += `
 // GLOBAL CSS VARIABLES

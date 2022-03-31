@@ -5,7 +5,7 @@ const { successMessage } = require('./jsonToCssScssTs');
 
 const data = require('./generator.data');
 const { types } = require('./generator.types');
-const { scss } = require('./generator.values');
+const { scss } = require('./generator.styles');
 const { convertAllSvgs } = require('./generator.icons');
 
 fs.ensureDirSync(path.resolve(__dirname, '../dist/'));

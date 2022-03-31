@@ -1,7 +1,7 @@
 import './styles.scss';
 
 import allFontImports from '../utils/generator.fontImports';
-import { scss } from '../utils/generator.values';
+import { scss } from '../utils/generator.styles';
 import { types } from '../utils/generator.types';
 
 const banners = Object.keys(allFontImports);

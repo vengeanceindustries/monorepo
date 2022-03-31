@@ -9,47 +9,47 @@
 		}
 	},
 	"color": {
-		"primary": "{color.science_blue}",
-		"secondary": "{color.mineshaft}",
-		"highlight": "{color.science_blue}"
+		"primary": "{science_blue}",
+		"secondary": "{mineshaft}",
+		"highlight": "{science_blue}"
 	},
 	"theme": {
 		"light": {
 			"css": {
-				"color": "{color.black}",
-				"background-color": "{color.white}"
+				"color": "{black}",
+				"background-color": "{white}"
 			},
 			"button": {
 				"primary": {
-					"color": "{color.black}",
-					"border-color": "{color.white}",
-					"background-color": "{color.white}"
+					"color": "{black}",
+					"border-color": "{white}",
+					"background-color": "{white}"
 				},
 				"secondary": {
-					"color": "{color.white}",
-					"border-color": "{color.white}",
-					"background-color": "{color.black}"
+					"color": "{white}",
+					"border-color": "{white}",
+					"background-color": "{black}"
 				}
 			}
 		},
 		"dark": {
-			"color": "{color.white}",
-			"background-color": "{color.mineshaft}"
+			"color": "{white}",
+			"background-color": "{mineshaft}"
 		},
 		"accent": {
 			"css": {
-				"color": "{color.white}",
+				"color": "{white}",
 				"background-color": "var(--color-primary)"
 			},
 			"button": {
 				"primary": {
 					"color": "var(--color-primary)",
-					"border-color": "{color.white}",
-					"background-color": "{color.white}"
+					"border-color": "{white}",
+					"background-color": "{white}"
 				},
 				"secondary": {
-					"color": "{color.white}",
-					"border-color": "{color.white}",
+					"color": "{white}",
+					"border-color": "{white}",
 					"background-color": "var(--color-primary)"
 				}
 			}

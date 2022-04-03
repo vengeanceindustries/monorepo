@@ -1,5 +1,5 @@
-@import '../dist/index.scss';
-@import '../utils/fonts.mixins.scss';
+@import '../index';
+@import '../utils/fonts.mixins';
 
 body {
 	@include font('body-2');

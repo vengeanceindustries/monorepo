@@ -7,10 +7,10 @@
 	"main": "dist/index",
 	"scripts": {
 		"start": "parcel index.html --open",
-		"prestart": "yarn run generate",
+		"prestart": "yarn run build:tokens",
 		"build": "parcel build --no-minify index.html",
-		"prebuild": "yarn run generate",
-		"generate": "node utils/generator.write.js"
+		"prebuild": "yarn run build:tokens",
+		"build:tokens": "node utils/generator.write.js"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

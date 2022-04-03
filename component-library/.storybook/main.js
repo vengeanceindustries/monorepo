@@ -8,7 +8,7 @@ module.exports = {
 		'@storybook/addon-essentials',
 		'@storybook/preset-scss',
 	],
-	extensions: ['.scss'],
+	extensions: ['.css, .scss'],
 	framework: '@storybook/react',
 	core: {
 		builder: 'webpack5',

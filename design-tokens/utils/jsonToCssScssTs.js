@@ -280,7 +280,9 @@ function sassVariable(obj) {
 function jsonToStyles(obj, space = '\t') {
 	if (!isTrueObject(obj)) {
 		warn('jsonToStyles', 'attempting to strigify a non-object', obj);
-		return `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
+		return !obj
+			? undefined
+			: `{\r${space}${JSON.stringify(obj, null, space)}\r}`;
 	}
 	return (
 		JSON.stringify(obj, null, space)

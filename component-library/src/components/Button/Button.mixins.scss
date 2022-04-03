@@ -4,12 +4,14 @@ $Button--height: 2.75rem;
 $Button--borderWidth: 1px;
 $Button--borderRadius: 2px;
 $Button--lineHeight: 1;
-$Button--textTransform: uppercase !default;
 $Button--fontName: 'label';
-$Button--fontSize: typemaps-get-font-attr($Button--fontName) or px-to-rems(14px); // Sass uses 'or' for fallback
-$Button--fontSize: 0.875rem; // px-to-rems(14px);
-@debug '$Button--fontSize: #{$Button--fontSize}';
+$Button--fontSize: $font-size-label or typemaps-get-font-attr($Button--fontName) or px-to-rems(14px); // Sass uses 'or' for fallback
 $Button--fontHeight: $Button--lineHeight * $Button--fontSize;
+// TO DO: move to tokens
+// $Button--textTransform: uppercase !default;
+:root {
+	--Button--textTransform: uppercase;
+}
 
 $Button--paddingV: ($Button--height - $Button--fontHeight)/2 -
 	px-to-rems($Button--borderWidth);
@@ -37,7 +39,7 @@ $Button_disabled--backgroundColor: $color-wild_sand;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	line-height: $Button--lineHeight;
+	// line-height: $Button--lineHeight;
 	border: #{$Button--borderWidth} solid;
 	border-radius: $Button--borderRadius;
 	vertical-align: middle;
@@ -55,7 +57,7 @@ $Button_disabled--backgroundColor: $color-wild_sand;
 	line-height: $Button--lineHeight;
 	min-height: $Button--height;
 	padding: #{$Button--paddingV} #{$Button--paddingH};
-	text-transform: $Button--textTransform;
+	text-transform: var(--Button--textTransform);
 }
 
 @mixin Button_size_mobile {

@@ -8,6 +8,7 @@ const color = require('../src/options/colors.global.json');
 const layout = require('../src/options/layout.json');
 const fonts = require('../src/options/fonts.json');
 const fontStyles = require('../src/decisions/typography.json');
+const { theme } = require('../src/decisions/colors.decisions.json');
 
 // BANNER TOKENS //
 const FL = require('../src/themes/banner.FL.json');
@@ -100,6 +101,9 @@ let spacingData = `${FILE_COMMENT('spacing')}
 ${tsObject({ spacing })}
 ${tsObjectAndType({ spacingSize })}`;
 
+let themeData = `${FILE_COMMENT('theme')}
+${tsObjectAndType({ theme: Object.keys(theme) })}`;
+
 module.exports = {
 	banner: bannerData,
 	breakpoints: breakpointsData,
@@ -108,4 +112,5 @@ module.exports = {
 	content: contentData,
 	font: fontData,
 	spacing: spacingData,
+	theme: themeData,
 };

@@ -5,7 +5,9 @@
 	@include Button_size_normal;
 
 	&.focus,
-	&:focus {
+	&.hover,
+	&:focus:not(:disabled),
+	&:hover:not(:disabled) {
 		@include Button_state_focus;
 	}
 	&.disabled,
@@ -20,14 +22,56 @@
 	// 	}
 	// }
 
-	&--primary {
-		background-color: var(--button-primary-background-color);
-		border-color: var(--button-primary-border-color);
-		color: var(--button-primary-color);
+	// default light theme, no need for theme class wrapper
+	& {
+		&.Button--primary {
+			background-color: var(--theme-light-button-primary-background-color);
+			border-color: var(--theme-light-button-primary-border-color);
+			color: var(--theme-light-button-primary-color);
+		}
+		&.Button--secondary {
+			background-color: var(--theme-light-button-secondary-background-color);
+			border-color: var(--theme-light-button-secondary-border-color);
+			color: var(--theme-light-button-secondary-color);
+		}
 	}
-	&--secondary {
-		background-color: var(--button-secondary-background-color);
-		border-color: var(--button-secondary-border-color);
-		color: var(--button-secondary-color);
+
+	// .Theme--dark &,
+	// &--Theme-dark {
+	// 	&.Button--primary {
+	// 		background-color: var(--theme-dark-button-primary-background-color);
+	// 		border-color: var(--theme-dark-button-primary-border-color);
+	// 		color: var(--theme-dark-button-primary-color);
+	// 	}
+	// 	&.Button--secondary {
+	// 		background-color: var(--theme-dark-button-secondary-background-color);
+	// 		border-color: var(--theme-dark-button-secondary-border-color);
+	// 		color: var(--theme-dark-button-secondary-color);
+	// 	}
+	// }
+}
+
+.Theme--dark, .Button--darkTheme {
+	&.Button--primary {
+		background-color: var(--theme-dark-button-primary-background-color);
+		border-color: var(--theme-dark-button-primary-border-color);
+		color: var(--theme-dark-button-primary-color);
+	}
+	&.Button--secondary {
+		background-color: var(--theme-dark-button-secondary-background-color);
+		border-color: var(--theme-dark-button-secondary-border-color);
+		color: var(--theme-dark-button-secondary-color);
+	}
+
+}
+
+.Theme {
+	&--light {
+		background-color: var(--theme-light-container-background-color);
+		color: var(--theme-light-container-color);
+	}
+	&--dark {
+		background-color: var(--theme-dark-container-background-color);
+		color: var(--theme-dark-container-color);
 	}
 }

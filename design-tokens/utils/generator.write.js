@@ -18,6 +18,7 @@ Object.entries(data).forEach(([token, data]) => {
 });
 
 fs.writeFileSync(path.resolve(__dirname, '../dist/index.ts'), allData);
+fs.writeFileSync(path.resolve(__dirname, '../dist/index.css'), css);
 fs.writeFileSync(path.resolve(__dirname, '../dist/index.scss'), scss);
 fs.writeFileSync(path.resolve(__dirname, '../dist/variables.css.scss'), css);
 // fs.writeFileSync(path.resolve(__dirname, '../dist/types.d.ts'), types);

@@ -47,7 +47,7 @@
 	},
 
 	"label": {
-		"font": "{font.weight.bold} {font.size.caption}/{font.lineHeight.mid} var(--font-family-base)",
+		"font": "{font.weight.bold} {font.size.label}/{font.lineHeight.mid} var(--font-family-base)",
 		"text-transform": "{font.textTransform.uppercase}",
 		"letter-spacing": "{font.letterSpacing.some}"
 	},

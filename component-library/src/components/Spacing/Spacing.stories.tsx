@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
 import Spacing, { SpacingProps } from './Spacing';
-import Button from '../Button';
+import { CTAButton } from '../Button';
 
 export default {
 	title: 'Example/Spacing',
@@ -16,7 +16,7 @@ const Template: Story<SpacingProps> = (args) => <Spacing {...args} />;
 
 export const SpacingAroundButton = Template.bind({});
 SpacingAroundButton.args = {
-	children: <Button label="button with spacing around" />,
+	children: <CTAButton text="button with spacing around" />,
 	padding: 1,
 };
 

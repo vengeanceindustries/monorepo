@@ -20,7 +20,7 @@ const fonts = require('../src/options/fonts.json');
 const { imports, ...font } = fonts;
 const fontStyles = require('../src/decisions/typography.json');
 
-const { button, theme } = require('../src/decisions/colors.decisions.json');
+const { theme } = require('../src/decisions/colors.decisions.json');
 
 // BANNER TOKENS //
 
@@ -35,7 +35,6 @@ const globalCustomProperties = {
 	name: FL.name,
 	color: FL.color,
 	font: { family: fontFamilyReference(FL.font.family) },
-	button: FL.theme.light.button,
 	theme: FL.theme,
 };
 
@@ -80,11 +79,14 @@ let css = `/* auto-generated file - design system variables */
 	/* COLOR VALUES */
 ${customProperties({ color })}
 	/* COLUMNS */
-${customProperties({ columns: columnSize }, {wrapQuotes: true})}
+${customProperties({ columns: columnSize }, { wrapQuotes: true })}
 	/* CONTENT WIDTHS */
 ${customProperties({ content: contentSize })}
 	/* FONTS */
-${customProperties({ font })}
+${customProperties({
+	font,
+	// font: fontStyles,
+})}
 	/* BANNER VARS - DEFAULTS */
 ${customProperties(globalCustomProperties)}
 }
@@ -113,13 +115,7 @@ ${variablesMap({ font }, false)}
 ${sassVariable({ font })}`;
 scss += ``;
 
-css += ``;
-
 const typemaps = `\r${fontStylesMap(fontStyles)}`;
-
-const buttons = `
-// Button style blocks
-${styleBlock({ Button: button }, '.', '--')}`;
 
 const themeStyles = `
 // Theme style blocks 

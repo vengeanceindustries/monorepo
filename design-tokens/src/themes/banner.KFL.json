@@ -15,7 +15,7 @@
 	},
 	"theme": {
 		"light": {
-			"css": {
+			"container": {
 				"color": "{black}",
 				"background-color": "{white}"
 			},
@@ -37,7 +37,7 @@
 			"background-color": "{mineshaft}"
 		},
 		"accent": {
-			"css": {
+			"container": {
 				"color": "{white}",
 				"background-color": "var(--color-primary)"
 			},

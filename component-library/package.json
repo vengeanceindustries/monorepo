@@ -9,7 +9,7 @@
 		"prestart": "yarn run build:tokens",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"build:tokens": "cd ../design-tokens && yarn run generate"
+		"build:tokens": "cd ../design-tokens && yarn run build:tokens"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

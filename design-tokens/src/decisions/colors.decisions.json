@@ -4,26 +4,42 @@
 		"neutral": "$gray",
 		"dark": "$mineshaft"
 	},
-	"button": {
-		"primary": {
-			"color": "var(--button-primary-color)",
-			"border-color": "var(--button-primary-border-color)",
-			"background-color": "var(--button-primary-background-color)"
-		},
-		"secondary": {
-			"color": "var(--button-secondary-color)",
-			"border-color": "var(--button-secondary-border-color)",
-			"background-color": "var(--button-secondary-background-color)"
-		}
-	},
 	"theme": {
 		"light": {
-			"color": "var(--theme-light-color)",
-			"background-color": "var(--theme-light-background-color)"
+			"container": {
+				"color": "var(--theme-light-container-color)",
+				"background-color": "var(--theme-light-container-background-color)"
+			},
+			"button": {
+				"primary": {
+					"color": "var(--theme-light-button-primary-color)",
+					"border-color": "var(--theme-light-button-primary-border-color)",
+					"background-color": "var(--theme-light-button-primary-background-color)"
+				},
+				"secondary": {
+					"color": "var(--theme-light-button-secondary-color)",
+					"border-color": "var(--theme-light-button-secondary-border-color)",
+					"background-color": "var(--theme-light-button-secondary-background-color)"
+				}
+			}
 		},
 		"dark": {
-			"color": "var(--theme-dark-color)",
-			"background-color": "var(--theme-dark-background-color)"
+			"container": {
+				"color": "var(--theme-dark-container-color)",
+				"background-color": "var(--theme-dark-container-background-color)"
+			},
+			"button": {
+				"primary": {
+					"color": "var(--theme-dark-button-primary-color)",
+					"border-color": "var(--theme-dark-button-primary-border-color)",
+					"background-color": "var(--theme-dark-button-primary-background-color)"
+				},
+				"secondary": {
+					"color": "var(--theme-dark-button-secondary-color)",
+					"border-color": "var(--theme-dark-button-secondary-border-color)",
+					"background-color": "var(--theme-dark-button-secondary-background-color)"
+				}
+			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-const { tsObject, unionType } = require('./jsonToCssScssTs');
+const { tsObject, tsObjectAndType } = require('./jsonToCssScssTs');
 
 function FILE_COMMENT(tokenType) {
 	return `// auto-generated file - ${tokenType} - design system values //\n`;
@@ -12,30 +12,29 @@ const fontStyles = require('../src/decisions/typography.json');
 // BANNER TOKENS //
 const FL = require('../src/themes/banner.FL.json');
 const KFL = require('../src/themes/banner.KFL.json');
-const SiteName = [FL.site, KFL.site];
+const bannerName = [FL.site, KFL.site];
 
 // FONT //
 const { family: families, imports, ...font } = fonts;
 const family = Object.keys(families);
-const allFont = { font: { family, ...font } };
-const fontName = Object.keys(fontStyles);
+const allFont = { font: { ...font, family } };
 
 // LAYOUT //
-const { breakpoints, content, grid, spacing } = layout;
+const { breakpoints, columns, content, grid, spacing } = layout;
 const gridBase = grid.base;
 
 const spacingSize = Object.keys(spacing).map(Number).sort();
 
 const bp = {};
 const queries = {};
-const breakpoint = { device: [], name: [], size: [] };
-const breakpointSize = { px: [], em: [], rem: [] };
+const breakpoint = { device: [], name: [], width: [] };
+const breakpointUnit = { px: [], em: [], rem: [] };
 
 Object.entries(breakpoints).forEach(([id, { name, value }]) => {
 	// types
 	breakpoint.device.push(name);
 	breakpoint.name.push(id);
-	breakpoint.size.push(value);
+	breakpoint.width.push(value);
 
 	// js data
 	const below = `${(value - 1) / gridBase}em`;
@@ -49,48 +48,62 @@ Object.entries(breakpoints).forEach(([id, { name, value }]) => {
 
 	bp[id] = data;
 	bp[device] = data;
-	breakpointSize.px.push(data.px);
-	breakpointSize.em.push(data.em);
-	breakpointSize.rem.push(data.rem);
+	breakpointUnit.px.push(data.px);
+	breakpointUnit.em.push(data.em);
+	breakpointUnit.rem.push(data.rem);
 	queries[`mq_for_${device}_up`] = `(min-width: ${data.em})`;
 	queries[`mq_for_below_${device}`] = `screen and (max-width: ${below})`;
 });
 
+let bannerData = `${FILE_COMMENT('banners')}
+${tsObjectAndType({ bannerName })}`;
+
 let breakpointsData = `${FILE_COMMENT('breakpoints')}
-${tsObject({ breakpoints: bp })}
-${tsObject({ breakpointSize })}
-${tsObject({ breakpointDevices: breakpoint.device })}
-${tsObject({ breakpointNames: breakpoint.name })}
-${tsObject({ breakpointSizes: breakpoint.size })}
-${tsObject({ queries })}`;
+// breakpoint.xs.value
+// breakpoint.phone.px
+// breakpoint.sm.em
+// breakpoint.tablet_portrait.rem
+${tsObject({ breakpoint: bp })}\n
+// breakpointUnit.px.map(bp => ETC)
+${tsObject({ breakpointUnit })}\n
+${tsObjectAndType({
+	breakpointDevice: breakpoint.device,
+	breakpointName: breakpoint.name,
+	breakpointWidth: breakpoint.width,
+	queries,
+	queryName: Object.keys(queries),
+})}`;
 
 let colorData = `${FILE_COMMENT('color')}
 ${tsObject({ color })}
-${tsObject({ colorName: Object.keys(color) })}
-export type ColorName = typeof colorName[number];`;
+${tsObjectAndType({ colorName: Object.keys(color) })}`;
 
 let contentData = `${FILE_COMMENT('content')}
 ${tsObject({ content })}
-${tsObject({ contentName: Object.keys(content) })}
-export type ContentName = typeof contentName[number];`;
+${tsObjectAndType({ contentName: Object.keys(content) })}`;
+
+let columnData = `${FILE_COMMENT('columns')}
+${tsObject({ columns })}
+${tsObjectAndType({ columnSize: Object.keys(columns) })}`;
 
 let fontData = `${FILE_COMMENT('fonts')}
 ${tsObject(allFont)}
-${tsObject({ fontFamily: family })}
-export type FontFamily = typeof fontFamily[number];
-
-${tsObject({ fontName })}
-// ${unionType({ FontName: fontName })}
-export type FontName = typeof fontName[number];`;
+${tsObjectAndType({
+	fontFamily: family,
+	fontName: Object.keys(fontStyles),
+	fontWeight: Object.keys(font.weight),
+	letterSpacing: Object.keys(font.letterSpacing),
+	textTransform: Object.keys(font.textTransform),
+})}`;
 
 let spacingData = `${FILE_COMMENT('spacing')}
 ${tsObject({ spacing })}
-${tsObject({ spacingSize })}
-export type SpacingSize = typeof spacingSize[number];
-`;
+${tsObjectAndType({ spacingSize })}`;
 
 module.exports = {
+	banner: bannerData,
 	breakpoints: breakpointsData,
+	columns: columnData,
 	color: colorData,
 	content: contentData,
 	font: fontData,

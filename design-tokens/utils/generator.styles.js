@@ -1,7 +1,7 @@
 const {
 	bannerProperties,
+	customProperties,
 	fontFamilyReference,
-	globalProperties,
 	fontStylesMap,
 	sassVariable,
 	styleBlock,
@@ -34,11 +34,7 @@ const globalCustomProperties = {
 	site: FL.site,
 	name: FL.name,
 	color: FL.color,
-	// color: {...color, ...FL.color},
-	font: {
-		...font,
-		family: { ...font.family, ...fontFamilyReference(FL.font.family) },
-	},
+	font: { family: fontFamilyReference(FL.font.family) },
 	button: FL.theme.light.button,
 	theme: FL.theme,
 };
@@ -67,7 +63,8 @@ Object.entries(breakpoints).forEach(([id, { name, value }]) => {
 const contentSize = {};
 
 Object.entries(content).forEach(([id, value]) => {
-	contentSize[id] = `${value / gridBase}em`;
+	const out = typeof value === 'number' ? `${value / gridBase}em` : value;
+	contentSize[id] = out;
 });
 
 const columnSize = {};
@@ -77,35 +74,46 @@ Object.entries(columns).forEach(([id, value]) => {
 	columnSize[value] = id;
 });
 
+let css = `/* auto-generated file - design system variables */
+
+:root {
+	/* COLOR VALUES */
+${customProperties({ color })}
+	/* COLUMNS */
+${customProperties({ columns: columnSize }, {wrapQuotes: true})}
+	/* CONTENT WIDTHS */
+${customProperties({ content: contentSize })}
+	/* FONTS */
+${customProperties({ font })}
+	/* BANNER VARS - DEFAULTS */
+${customProperties(globalCustomProperties)}
+}
+/* BANNER VARS  */
+${bannerProperties(bannerCustomProperties)}`;
+
 let scss = `// auto-generated file - design system variables //
 
 // BREAKPOINTS //\r
 ${sassVariable({ 'one-px-ems': `${1 / gridBase}em` })}
 ${variablesMap({ breakpoint: breakpointSizes }, false)}
 ${sassVariable({ bp, mq }, true)}
-${variablesMap({ mqs }, false)}`;
-scss += `
+${variablesMap({ mqs }, false)}
+// COLOR VALUES
+${variablesMap({ color })}
+${sassVariable({ color })}
+${sassVariable(color)}
 // CONTENT WIDTHS //\r
 ${variablesMap({ content: contentSize }, false)}
 ${sassVariable({ content: contentSize })}
 // COLUMNS //\r
 ${variablesMap({ columns: columnSize }, false)}
-${sassVariable({ columns: columnSize })}`;
-scss += `
-// SCSS FONTS //\r
+${sassVariable({ columns: columnSize })}
+// FONTS //\r
 ${variablesMap({ font }, false)}
 ${sassVariable({ font })}`;
-scss += `
-// SCSS COLOR VALUES
-${variablesMap({ color })}
-${sassVariable({ color })}
-${sassVariable(color)}`;
+scss += ``;
 
-scss += `
-// GLOBAL CSS VARIABLES
-${globalProperties(globalCustomProperties)}
-// BANNER CSS VARS
-${bannerProperties(bannerCustomProperties)}`;
+css += ``;
 
 const typemaps = `\r${fontStylesMap(fontStyles)}`;
 
@@ -121,5 +129,6 @@ scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
 // scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
 
 module.exports = {
+	css,
 	scss,
 };

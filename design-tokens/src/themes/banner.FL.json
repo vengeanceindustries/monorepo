@@ -1,6 +1,6 @@
 {
-	"site": "FL",
-	"name": "Foot Locker",
+	"site": "'FL'",
+	"name": "'Foot Locker'",
 	"font": {
 		"family": {
 			"base": "Roboto",
@@ -10,46 +10,46 @@
 		}
 	},
 	"color": {
-		"primary": "{my_crimson_is_better_than_yours}",
-		"secondary": "{woodsmoke}",
-		"highlight": "{my_crimson_is_better_than_yours}",
-		"black": "{woodsmoke}",
-		"grey": "{emperor}"
+		"primary": "{color.my_crimson_is_better_than_yours}",
+		"secondary": "{color.woodsmoke}",
+		"highlight": "{color.my_crimson_is_better_than_yours}",
+		"black": "{color.woodsmoke}",
+		"grey": "{color.emperor}"
 	},
 	"theme": {
 		"light": {
 			"css": {
-				"color": "{black}",
-				"background-color": "{white}"
+				"color": "{color.black}",
+				"background-color": "{color.white}"
 			},
 			"button": {
 				"primary": {
-					"color": "{white}",
-					"border-color": "{black}",
-					"background-color": "{black}"
+					"color": "{color.white}",
+					"border-color": "{color.black}",
+					"background-color": "{color.black}"
 				},
 				"secondary": {
-					"color": "{black}",
-					"border-color": "{black}",
-					"background-color": "{white}"
+					"color": "{color.black}",
+					"border-color": "{color.black}",
+					"background-color": "{color.white}"
 				}
 			}
 		},
 		"dark": {
 			"css": {
-				"color": "{white}",
-				"background-color": "{mineshaft}"
+				"color": "{color.white}",
+				"background-color": "{color.mineshaft}"
 			},
 			"button": {
 				"primary": {
-					"color": "{black}",
-					"border-color": "{white}",
-					"background-color": "{white}"
+					"color": "{color.black}",
+					"border-color": "{color.white}",
+					"background-color": "{color.white}"
 				},
 				"secondary": {
-					"color": "{white}",
-					"border-color": "{white}",
-					"background-color": "{black}"
+					"color": "{color.white}",
+					"border-color": "{color.white}",
+					"background-color": "{color.black}"
 				}
 			}
 		}

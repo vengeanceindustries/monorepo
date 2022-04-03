@@ -60,9 +60,12 @@ function camelize(str, options = {}) {
 		});
 }
 
-function transformValue(val, inCustomVar = false, useSassVar = false) {
+function transformValue(val, userConfigs) {
+	const config = { useSassVar: false, wrapQuotes: false, ...userConfigs };
+	const { useSassVar, wrapQuotes } = config;
+
 	if (isStringArray(val)) {
-		return inCustomVar ? val.join(', ') : `(${val.join(', ')})`;
+		return useSassVar ? `(${val.join(', ')})` : val.join(', ');
 	}
 
 	let valTransformed = val;
@@ -74,9 +77,13 @@ function transformValue(val, inCustomVar = false, useSassVar = false) {
 			const value = str.replace(/\./g, '-');
 			const valFormatted = useSassVar
 				? value.replace('{', '#{$')
-				: value.replace('{', 'var(--').replace('}', '');
+				: value.replace('{', 'var(--').replace('}', ')');
 			valTransformed = valTransformed.replace(str, valFormatted);
 		});
+	} else {
+		if (wrapQuotes && typeOf(valTransformed) === 'string') {
+			valTransformed = `'${valTransformed}'`;
+		}
 	}
 	return valTransformed;
 }
@@ -85,68 +92,59 @@ function transformValue(val, inCustomVar = false, useSassVar = false) {
  * @param {object} obj nested object whose keys will be flattened to a css-style variable
  * @param {string} prefix leading string on variable name; defaults to "$" for sass vars
  */
-function flattenToVariable(obj, prefix = '$', useSassVar = false) {
+function flattenToVariable(obj, userConfigs) {
 	if (!isTrueObject(obj)) {
 		warn('flattenToVariable', 'cannot create styles from non-object', obj);
 		return '';
 	}
+	const config = {
+		prefix: '$',
+		useSassVar: false,
+		wrapQuotes: false,
+		...userConfigs,
+	};
+
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		let attr = `${prefix}${key}`;
+		let attr = `${config.prefix}${key}`;
+		const configs = { ...config, prefix: `${attr}-` };
 
 		if (isTrueObject(val)) {
-			return all + `${flattenToVariable(val, `${attr}-`, useSassVar)}`;
+			return all + `${flattenToVariable(val, configs)}`;
 		}
 
-		return (
-			all +
-			`${attr}: ${transformValue(
-				val,
-				prefix.includes('--'),
-				useSassVar
-			)};\r`
-		);
+		return all + `${attr}: ${transformValue(val, config)};\r`;
 	}, '');
 }
 
 const transformConfig = {
 	depth: 0,
 	lineEnd: ';\r\n',
-	pre: '$',
+	prefix: '$',
 	useSassVar: true,
 };
 
 function transformObj(obj = {}, config = transformConfig) {
-	const { depth, lineEnd, pre, useSassVar } = config;
+	const { depth, lineEnd, prefix, useSassVar } = config;
 
 	const indent = '\t'.repeat(depth);
 
 	return Object.entries(obj).reduce((all, [token, val]) => {
-		let key = `${pre}${token}`;
+		let key = `${prefix}${token}`;
 
 		if (!isTrueObject(val)) {
-			return (
-				all +
-				`${indent}${key}: ${transformValue(
-					val,
-					pre.includes('--'),
-					useSassVar
-				)}${lineEnd}`
-			);
+			const transformed = transformValue(val, { useSassVar });
+			return all + `${indent}${key}: ${transformed}${lineEnd}`;
 		}
 
 		const configs = {
 			...config,
 			depth: depth + 1,
 			lineEnd: ',\r',
-			pre: '',
+			prefix: '',
 		};
-		return (
-			all +
-			`${indent}${key}: (\r${transformObj(
-				val,
-				configs
-			)}${indent})${lineEnd}`
-		);
+		const transformed = transformObj(val, configs);
+
+		return all + `${indent}${key}: (\r${transformed}${indent})${lineEnd}`;
 	}, '');
 }
 
@@ -167,7 +165,7 @@ function flattenToSassMap(obj, prefix = '$') {
 			...transformConfig,
 			depth: 1,
 			lineEnd: ',\r',
-			pre: '',
+			prefix: '',
 		};
 
 		const arr = isStringArray(val)
@@ -222,15 +220,19 @@ function updateFontFamilyReferences(obj) {
 
 // CSS CUSTOM PROPERTISE AKA CSS VARIABLES ////////////
 
-function customProperties(obj, prefix = '', useSassVar) {
-	return flattenToVariable(obj, `${prefix}--`, useSassVar);
+function customProperties(obj, userConfigs) {
+	const config = { depth: 1, prefix: '', ...userConfigs };
+	const indent = '\t'.repeat(config.depth);
+	return flattenToVariable(obj, { ...config, prefix: `${indent}--` });
 }
 
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased custom property (aka CSS variable)
  * @param {string} root "selector" name of context for properties, defaults to document :root
  */
-function globalProperties(obj, root = ':root', useSassVar = true) {
+function globalProperties(obj, userConfigs) {
+	const configs = { root: ':root', wrapQuotes: false, ...userConfigs };
+
 	if (!isTrueObject(obj)) {
 		warn(
 			'globalProperties',
@@ -240,7 +242,7 @@ function globalProperties(obj, root = ':root', useSassVar = true) {
 		return '';
 	}
 
-	return `${root} {\r${customProperties(obj, `\t`, useSassVar)}};\r\n`;
+	return `${configs.root} {\r${customProperties(obj, configs)}};\r\n`;
 }
 
 /**
@@ -258,7 +260,7 @@ function bannerProperties(obj) {
 	}
 
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		return all + globalProperties(val, `.${key}`, true);
+		return all + globalProperties(val, { root: `.${key}` });
 	}, '');
 }
 
@@ -267,12 +269,12 @@ function bannerProperties(obj) {
 /**
  * @param {object} obj nested object whose keys will be flattened to a snake-cased sass variable
  */
-function sassVariable(obj, useSassVar = true) {
+function sassVariable(obj) {
 	if (!isTrueObject(obj)) {
 		warn('sassVariable', 'cannot create styles from non-object', obj);
 		return '';
 	}
-	return flattenToVariable(obj, '$', useSassVar);
+	return flattenToVariable(obj, { prefix: '$', useSassVar: true });
 }
 
 function jsonToStyles(obj, space = '\t') {
@@ -329,7 +331,21 @@ function fontStylesMap(obj) {
 
 // JAVASCRIPT TYPES ///////////////////////////////////
 
+const quotesRegex = RegExp(/['"]([^"']+)['"]/g);
+
+/** if val is string and isn't already in quotes, wrap in quotes */
+function quotifyString(val) {
+	const isString = typeof val === 'string';
+	const matches = isString && val.match(quotesRegex);
+	// console.log(val, matches);
+	return isString && !matches ? `"${val}"` : val;
+}
+
 function jsonToObject(val) {
+	if (typeOf(val) === 'array') {
+		return `[${val.map(quotifyString).join(', ')}]`;
+	}
+	// strigify & remove quotes from around object keys
 	return JSON.stringify(val, null, '\t').replace(/"([^"]+)":/g, '$1:');
 }
 
@@ -347,7 +363,17 @@ function jsObject(obj, prefix = '', lineEnd = ';\r') {
 }
 
 function tsObject(obj) {
-	return jsObject(obj, '', ` as const;\r\r`);
+	return jsObject(obj, '', ` as const;\r`);
+}
+
+function tsObjectAndType(obj) {
+	if (isTrueObject(obj)) {
+		return Object.keys(obj).reduce((all, key) => {
+			const val = { [key]: obj[key] };
+			return all + tsObject(val) + '\n' + unionType(val) + '\n\n';
+		}, '');
+	}
+	return tsObject(obj) + '\n' + unionType(obj) + '\n';
 }
 
 // TYPESCRIPT TYPES ///////////////////////////////////
@@ -362,9 +388,7 @@ function createUnion(arr) {
 		);
 		return '';
 	}
-	return arr
-		.map((item) => (typeof item === 'string' ? `"${item}"` : item))
-		.join(' | ');
+	return arr.map(quotifyString).join(' | ');
 }
 
 /**
@@ -395,11 +419,13 @@ function unionType(obj, prefix = '') {
 
 module.exports = {
 	bannerProperties,
+	customProperties,
 	fontFamilyReference,
 	fontStylesMap,
 	globalProperties,
 	jsObject,
 	tsObject,
+	tsObjectAndType,
 	sassVariable,
 	styleBlock,
 	unionType,

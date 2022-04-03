@@ -1,4 +1,4 @@
-import { SiteName } from 'design-tokens';
+import { BannerName } from 'design-tokens';
 
 const fonts = require('../src/options/fonts.json');
 const fontImports = fonts.imports;
@@ -17,7 +17,7 @@ function generateFontLink(families: string): string {
 
 const entries = Object.entries(allBannerTokens);
 
-const allFontImports: Record<SiteName, string> = entries.reduce(
+const allFontImports: Record<BannerName, string> = entries.reduce(
 	(all, [banner, bannerTokens]) => {
 		const { base, heading, mono } = bannerTokens.font.family;
 
@@ -29,7 +29,7 @@ const allFontImports: Record<SiteName, string> = entries.reduce(
 		all[banner] = generateFontLink(families.join('&'));
 		return all;
 	},
-	{} as Record<SiteName, string>
+	{} as Record<BannerName, string>
 );
 
 export default allFontImports;

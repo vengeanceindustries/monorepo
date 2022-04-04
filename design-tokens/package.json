@@ -5,6 +5,7 @@
 	"license": "MIT",
 	"ignore-main": "index.html",
 	"main": "dist/index",
+	"types": "typings/types.d.ts",
 	"scripts": {
 		"start": "parcel index.html --open",
 		"prestart": "yarn run build:tokens",

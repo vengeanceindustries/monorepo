@@ -1,5 +1,6 @@
 {
-	"include": ["src"],
+	"include": ["../design-tokens", "src/**/*", "global.d.ts"],
+	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"declaration": true,
@@ -12,6 +13,7 @@
 		"moduleResolution": "node",
 		"noFallthroughCasesInSwitch": true,
 		"paths": {
+			"*": ["./types/*.d.ts"],
 			"design-tokens": ["../design-tokens/"]
 		},
 		"resolveJsonModule": true,
@@ -20,6 +22,6 @@
 		"strict": true,
 		"strictNullChecks": false,
 		"target": "es5",
-		"typeRoots": ["./types"]
+		"typeRoots": ["./types", "design-tokens", "./node_modules/@types"]
 	}
 }

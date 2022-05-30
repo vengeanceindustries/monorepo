@@ -1,22 +1,25 @@
 {
-	"exclude": ["**/tests/*"],
+	"include": ["src/**/*", "utils", "types/global.d.ts", "dist/index.ts"],
+	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": ".",
+		"declaration": true,
+		"declarationDir": "types",
+		"emitDeclarationOnly": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
-		"jsx": "react",
+		"jsx": "react", // "preserve",
 		"module": "ESNext",
 		"moduleResolution": "node",
 		"noFallthroughCasesInSwitch": true,
-		"noUnusedLocals": true,
 		"paths": {
-			"ui-library": ["ui-library"],
-			"UI-LIB": ["ui-library"]
+			"*": ["./types/*.d.ts"]
 		},
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
-		"strict": false,
+		// "sourceMap": true,
+		"strict": true,
+		"strictNullChecks": false,
 		"target": "es5",
 		"typeRoots": ["./types", "./node_modules/@types"]
 	}

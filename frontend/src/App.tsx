@@ -1,6 +1,6 @@
 import React from 'react';
 import Heading from './Heading';
-import { Button, Spacing } from 'component-library';
+import { Button, Spacing } from 'ui-library';
 
 export default function App({}): JSX.Element {
 	return (

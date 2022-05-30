@@ -1,10 +1,9 @@
 # monorepo
 
-test monorepo using yarn workspaces, with design-tokens and component-library "packages"
+test monorepo using yarn workspaces, with design tokens and component library "package"
 
 <ul>
-	<li><a href="./design-tokens/README.md">design-tokens</a></li>
-	<li><a href="./component-library/README.md">component-library</a> TODO</li>
+	<li><a href="./ui-library/README.md">ui-library</a></li>
 	<li><a href="./frontend/README.md" style="text-decoration: line-through">frontend</a> TODO</li>
 </ul>
 

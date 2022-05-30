@@ -1,12 +1,14 @@
 {
 	"private": true,
 	"workspaces": [
-		"component-library",
-		"design-tokens",
+		"ui-library",
 		"frontend"
 	],
 	"scripts": {
-		"build:tokens": "cd design-tokens && yarn run build:tokens",
-		"storybook": "cd component-library && yarn run start"
+		"build:tokens": "cd ui-library && yarn run build:tokens",
+		"storybook": "cd ui-library && yarn run start"
+	},
+	"dependencies": {
+		"yarn": "^1.22.18"
 	}
 }

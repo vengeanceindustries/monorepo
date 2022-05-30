@@ -1,35 +1,48 @@
-const { tsObject, tsObjectAndType } = require('./jsonToCssScssTs');
+const {
+	FILE_COMMENT,
+	objectAndType,
+	objectNameAndType,
+	tsObject,
+} = require('./jsonToCssScssTs');
 
-function FILE_COMMENT(tokenType) {
-	return `// auto-generated file - ${tokenType} - design system values //\n`;
-}
 // GLOBAL TOKENS //
 const color = require('../tokens/options/colors.global.json');
 const layout = require('../tokens/options/layout.json');
 const fonts = require('../tokens/options/fonts.json');
 const fontStyles = require('../tokens/decisions/typography.json');
 const { theme } = require('../tokens/decisions/colors.decisions.json');
+const { button } = require('../tokens/decisions/components.json');
 
 // BANNER TOKENS //
 const FL = require('../tokens/themes/banner.FL.json');
 const KFL = require('../tokens/themes/banner.KFL.json');
 const bannerName = [FL.site, KFL.site];
 
+let bannerData = `${FILE_COMMENT('banners')}
+${objectAndType({ bannerName })}`;
+
 // FONT //
 const { family: families, imports, ...font } = fonts;
-const family = Object.keys(families);
-const allFont = { font: { ...font, family } };
+const fontFamily = Object.keys(families);
+const allFont = { font: { ...font, family: fontFamily } };
+const fontObj = {
+	fontFamily,
+	fontName: Object.keys(fontStyles),
+	fontSize: Object.keys(font.size),
+	fontWeight: Object.keys(font.weight),
+	letterSpacing: Object.keys(font.letterSpacing),
+	textTransform: Object.keys(font.textTransform),
+};
 
 // LAYOUT //
-const { breakpoints, columns, content, grid, spacing } = layout;
+const { breakpoints, content, grid, spacing } = layout;
+const column = layout.columns;
 const gridBase = grid.base;
 
-const spacingSize = Object.keys(spacing).map(Number).sort();
-
-const bp = {};
-const queries = {};
+const bpObj = {};
+const query = {};
 const breakpoint = { device: [], name: [], width: [] };
-const breakpointUnit = { px: [], em: [], rem: [] };
+const breakpointUnit = { px: [], em: [], rem: [], unitless: [] };
 
 Object.entries(breakpoints).forEach(([id, { name, value }]) => {
 	// types
@@ -47,68 +60,55 @@ Object.entries(breakpoints).forEach(([id, { name, value }]) => {
 		rem: `${value / gridBase}rem`,
 	};
 
-	bp[id] = data;
-	bp[device] = data;
+	bpObj[id] = data;
+	bpObj[device] = data;
 	breakpointUnit.px.push(data.px);
 	breakpointUnit.em.push(data.em);
 	breakpointUnit.rem.push(data.rem);
-	queries[`mq_for_${device}_up`] = `(min-width: ${data.em})`;
-	queries[`mq_for_below_${device}`] = `screen and (max-width: ${below})`;
+	breakpointUnit.unitless.push(value);
+	query[`mq_for_${device}_up`] = `(min-width: ${data.em})`;
+	query[`mq_for_below_${device}`] = `screen and (max-width: ${below})`;
 });
-
-let bannerData = `${FILE_COMMENT('banners')}
-${tsObjectAndType({ bannerName })}`;
 
 let breakpointsData = `${FILE_COMMENT('breakpoints')}
 // breakpoint.xs.value
 // breakpoint.phone.px
 // breakpoint.sm.em
 // breakpoint.tablet_portrait.rem
-${tsObject({ breakpoint: bp })}\n
+${tsObject({ breakpoint: bpObj })}\n
 // breakpointUnit.px.map(bp => ETC)
-${tsObject({ breakpointUnit })}\n
-${tsObjectAndType({
+${tsObject({ breakpointUnit, query })}\n
+${objectAndType({
 	breakpointDevice: breakpoint.device,
 	breakpointName: breakpoint.name,
 	breakpointWidth: breakpoint.width,
-	queries,
-	queryName: Object.keys(queries),
+	queryName: Object.keys(query),
 })}`;
 
-let colorData = `${FILE_COMMENT('color')}
-${tsObject({ color })}
-${tsObjectAndType({ colorName: Object.keys(color) })}`;
+let colorData = objectNameAndType('color', color);
 
-let contentData = `${FILE_COMMENT('content')}
-${tsObject({ content })}
-${tsObjectAndType({ contentName: Object.keys(content) })}`;
+let contentData = objectNameAndType('content', content);
 
-let columnData = `${FILE_COMMENT('columns')}
-${tsObject({ columns })}
-${tsObjectAndType({ columnSize: Object.keys(columns) })}`;
+let columnData = objectNameAndType('column', column);
+
+let themeData = objectNameAndType('theme', theme);
 
 let fontData = `${FILE_COMMENT('fonts')}
-${tsObject(allFont)}
-${tsObjectAndType({
-	fontFamily: family,
-	fontName: Object.keys(fontStyles),
-	fontSize: Object.keys(font.size),
-	fontWeight: Object.keys(font.weight),
-	letterSpacing: Object.keys(font.letterSpacing),
-	textTransform: Object.keys(font.textTransform),
-})}`;
+${tsObject(allFont)}\n
+${objectAndType(fontObj)}`;
 
 let spacingData = `${FILE_COMMENT('spacing')}
 ${tsObject({ spacing })}
-${tsObjectAndType({ spacingSize })}`;
+${objectAndType({ spacingName: Object.keys(spacing).map(Number).sort() })}`;
 
-let themeData = `${FILE_COMMENT('theme')}
-${tsObjectAndType({ theme: Object.keys(theme) })}`;
+let buttonData = `${FILE_COMMENT('button')}
+${objectAndType({ button }, true)}`;
 
 module.exports = {
 	banner: bannerData,
 	breakpoints: breakpointsData,
-	columns: columnData,
+	button: buttonData,
+	column: columnData,
 	color: colorData,
 	content: contentData,
 	font: fontData,

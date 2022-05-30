@@ -12,10 +12,8 @@ declare global {
 		variant?: string;
 	}
 
-	type ButtonType = 'button' | 'reset' | 'submit';
-
 	type ButtonBase = BemClasses &
-		React.HTMLAttributes<HTMLButtonElement> &
+		React.HTMLAttributes<HTMLEButtonElement> &
 		React.PropsWithChildren<{
 			// /** onClick handler function */
 			// handleClick?: (...args: any[]) => any;
@@ -27,8 +25,6 @@ declare global {
 			type?: ButtonType;
 		}>;
 
-	type CTAButtonHierarchy = 'primary' | 'secondary' | 'tertiary';
-
 	export interface CTAButtonProps extends ButtonBase {
 		/** NEVER change font style of a CTA button */
 		font?: never;
@@ -37,7 +33,7 @@ declare global {
 		// /** optionally change button size */
 		// size?: '' | 'small';
 		/** specify "style" variation for visual hierarchy. Renders as `.Button--${variant}` */
-		variant?: CTAButtonHierarchy;
+		variant?: ButtonCTAHierarchy;
 	}
 }
 export {};

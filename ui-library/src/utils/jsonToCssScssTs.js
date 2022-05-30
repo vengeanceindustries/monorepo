@@ -1,5 +1,9 @@
 // UTILS //
 
+function FILE_COMMENT(tokenType) {
+	return `// auto-generated file - ${tokenType} - design system values //\n`;
+}
+
 function log(text, ...args) {
 	console.log(`🎨 Design Tokens ${text}`, ...args);
 }
@@ -344,11 +348,14 @@ function quotifyString(val) {
 }
 
 function jsonToObject(val) {
+	if (typeOf(val) === 'undefined') {
+		return '';
+	}
 	if (typeOf(val) === 'array') {
 		return `[${val.map(quotifyString).join(', ')}]`;
 	}
 	// strigify & remove quotes from around object keys
-	return JSON.stringify(val, null, '\t').replace(/"([^"]+)":/g, '$1:');
+	return JSON.stringify(val, null, '\t'); //.replace(/"([^"]+)":/g, '$1:');
 }
 
 function jsObject(obj, prefix = '', lineEnd = ';\r') {
@@ -358,30 +365,14 @@ function jsObject(obj, prefix = '', lineEnd = ';\r') {
 	}
 
 	return Object.entries(obj).reduce((all, [key, val]) => {
-		const name = `${prefix}${camelize(key)}`;
+		const name = `${prefix}${camelize(key, { titleCase: !!prefix })}`;
 
 		return all + `export const ${name} = ${jsonToObject(val)}${lineEnd}`;
 	}, '');
 }
 
-function tsObject(obj) {
-	return jsObject(obj, '', ` as const;\r`);
-}
-
-function globalType(obj, prefix = '') {
-	return `declare global {
-	${unionType(obj, prefix)}
-}`;
-}
-
-function tsObjectAndType(obj) {
-	if (isTrueObject(obj)) {
-		return Object.keys(obj).reduce((all, key) => {
-			const val = { [key]: obj[key] };
-			return all + tsObject(val) + '\n' + globalType(val) + '\n\n';
-		}, '');
-	}
-	return tsObject(obj) + '\n' + globalType(obj) + '\n';
+function tsObject(obj, prefix = '') {
+	return jsObject(obj, prefix, ` as const;\r`);
 }
 
 // TYPESCRIPT TYPES ///////////////////////////////////
@@ -404,9 +395,9 @@ function createUnion(arr) {
  * @returns
  * export type GlobalFontSize = 'heading-1' | 'heading-2';
  */
-function unionType(obj, prefix = '') {
+function unionType(obj, prefix = '', exportPrefix = 'export ') {
 	if (isArray(obj) && prefix) {
-		return `export type ${prefix} = ${createUnion(obj)};\r`;
+		return `${exportPrefix}type ${prefix} = ${createUnion(obj)};\r`;
 	}
 
 	return Object.entries(obj).reduce((all, [key, val]) => {
@@ -416,16 +407,44 @@ function unionType(obj, prefix = '') {
 		const typeName = `${prefix}${camelize(key, { titleCase: true })}`;
 
 		if (isTrueObject(val) && hasChildObjects(val, true)) {
-			return all + `${unionType(val, `${typeName}`)}`;
+			return all + `${unionType(val, `${typeName}`, exportPrefix)}`;
 		}
 
 		const arr = isArray(val) ? val : Object.keys(val);
 
-		return all + `export type ${typeName} = ${createUnion(arr)};\r`;
+		return all + `${exportPrefix}type ${typeName} = ${createUnion(arr)};\r`;
 	}, '');
 }
 
+function globalType(obj, prefix = '') {
+	const types = Object.entries(obj).reduce((all, [key, val]) => {
+		return all + unionType({ [key]: val }, prefix, '\t');
+	}, '');
+	return `declare global {\n${types}\n}`;
+}
+
+function objectAndType(obj, flatten = false) {
+	if (!isTrueObject(obj)) {
+		console.log(typeOf(obj), obj);
+	}
+	let txt = Object.entries(obj).reduce((all, [key, val]) => {
+		if (flatten) {
+			return all + tsObject(val, key);
+		}
+		return all + tsObject({ [key]: val });
+	}, '');
+
+	return txt + globalType(obj);
+}
+
+function objectNameAndType(name, obj) {
+	return `${FILE_COMMENT(name)}
+${tsObject({ [name]: obj })}\n
+${objectAndType({ [`${name}Name`]: Object.keys(obj) })}`;
+}
+
 module.exports = {
+	FILE_COMMENT,
 	bannerProperties,
 	customProperties,
 	fontFamilyReference,
@@ -433,7 +452,8 @@ module.exports = {
 	globalProperties,
 	jsObject,
 	tsObject,
-	tsObjectAndType,
+	objectAndType,
+	objectNameAndType,
 	sassVariable,
 	styleBlock,
 	unionType,

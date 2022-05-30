@@ -1,0 +1,14 @@
+{
+	"button": {
+		"type": [
+			"button",
+			"reset",
+			"submit"
+		],
+		"CTAHierarchy": [
+			"primary",
+			"secondary",
+			"tertiary"
+		]
+	}
+}

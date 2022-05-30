@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
 	stories: [
 		'../src/**/*.stories.mdx',
@@ -13,4 +15,14 @@ module.exports = {
 	core: {
 		builder: 'webpack5',
 	},
+	webpackFinal: (config) => ({
+		...config,
+		resolve: {
+			...config.resolve,
+			alias: {
+				...config.resolve?.alias,
+				utils: path.resolve(__dirname, '../src/utils'),
+			},
+		},
+	}),
 };

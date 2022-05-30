@@ -11,21 +11,21 @@ const {
 
 // GLOBAL TOKENS //
 
-const color = require('../src/tokens/options/colors.global.json');
-const layout = require('../src/tokens/options/layout.json');
+const color = require('../tokens/options/colors.global.json');
+const layout = require('../tokens/options/layout.json');
 const { breakpoints, columns, content, grid } = layout;
 const gridBase = grid.base;
 
-const fonts = require('../src/tokens/options/fonts.json');
+const fonts = require('../tokens/options/fonts.json');
 const { imports, ...font } = fonts;
-const fontStyles = require('../src/tokens/decisions/typography.json');
+const fontStyles = require('../tokens/decisions/typography.json');
 
-const { theme } = require('../src/tokens/decisions/colors.decisions.json');
+const { theme } = require('../tokens/decisions/colors.decisions.json');
 
 // BANNER TOKENS //
 
-const FL = require('../src/tokens/themes/banner.FL.json');
-const KFL = require('../src/tokens/themes/banner.KFL.json');
+const FL = require('../tokens/themes/banner.FL.json');
+const KFL = require('../tokens/themes/banner.KFL.json');
 
 const bannerCustomProperties = updateFontFamilyReferences({ FL, KFL });
 

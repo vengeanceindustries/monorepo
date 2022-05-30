@@ -1,8 +1,9 @@
 {
-	"include": ["src/**/*", "utils", "types/global.d.ts", "dist/index.ts"],
+	"include": ["src/**/*", "src/utils", "types/global.d.ts", "dist/index.ts"],
 	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
+		"baseUrl": ".",
 		"declaration": true,
 		"declarationDir": "types",
 		"emitDeclarationOnly": true,
@@ -13,7 +14,8 @@
 		"moduleResolution": "node",
 		"noFallthroughCasesInSwitch": true,
 		"paths": {
-			"*": ["./types/*.d.ts"]
+			"*": ["./types/*.d.ts"],
+			"utils/*": ["./src/utils/*"]
 		},
 		"resolveJsonModule": true,
 		"skipLibCheck": true,

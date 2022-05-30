@@ -1,5 +1,5 @@
 import React from 'react';
-import { bemClassNames } from 'ui-library/src/utils/classNames';
+import { bemClassNames } from 'utils/classNames';
 
 export default function CTAButton({
 	children,

@@ -4,15 +4,15 @@ function FILE_COMMENT(tokenType) {
 	return `// auto-generated file - ${tokenType} - design system values //\n`;
 }
 // GLOBAL TOKENS //
-const color = require('../src/tokens/options/colors.global.json');
-const layout = require('../src/tokens/options/layout.json');
-const fonts = require('../src/tokens/options/fonts.json');
-const fontStyles = require('../src/tokens/decisions/typography.json');
-const { theme } = require('../src/tokens/decisions/colors.decisions.json');
+const color = require('../tokens/options/colors.global.json');
+const layout = require('../tokens/options/layout.json');
+const fonts = require('../tokens/options/fonts.json');
+const fontStyles = require('../tokens/decisions/typography.json');
+const { theme } = require('../tokens/decisions/colors.decisions.json');
 
 // BANNER TOKENS //
-const FL = require('../src/tokens/themes/banner.FL.json');
-const KFL = require('../src/tokens/themes/banner.KFL.json');
+const FL = require('../tokens/themes/banner.FL.json');
+const KFL = require('../tokens/themes/banner.KFL.json');
 const bannerName = [FL.site, KFL.site];
 
 // FONT //

@@ -1,4 +1,75 @@
 /// Loops though a map to render styles
+/// @param {Map} $map - scss map to loop through
+@mixin styleMap($map: $typemap) {
+	@each $key, $value in $map {
+		// @if ($key == 'mobile') {
+		// 	// 1) assign mobile styles if present,
+		// 	@include mq_for_phone_only {
+		// 		@include styleMap($value);
+		// 	}
+		// } @else {
+		// 2) nest deeper into the map,
+		@if (type-of($value) == 'map') {
+			&-#{$key} {
+				@include styleMap($value);
+			}
+		} @else {
+			// 3) render styles
+			@if ($key == 'content') {
+				content: quote($value);
+			} @else {
+				#{$key}: #{$value};
+			}
+		}
+		// }
+	}
+}
+
+$typemap: () !default;
+
+/// Font style mixin ////////////////////////////////////////////////
+/// Render specific type styles by searching for $name in $typemap
+/// @param {String} $name - style to find; don't add "font-" prefix
+@mixin font($name, $typemap: $typemap) {
+	@if map-has-key($typemap, $name) {
+		$props: map-get($typemap, $name);
+		@include styleMap($props);
+	} @else {
+		@warn 'No key "#{$name}" in map $typemap. HINT: key should not start with "font-"';
+		@warn $typemap;
+	}
+}
+
+/// loop through @param {Map} $typemap, creating .font classes for all styles
+@mixin typeClasses($typemap: $typemap) {
+	.font {
+		@each $name, $value in $typemap {
+			&-#{name} {
+				@include font($name);
+			}
+		}
+	}
+}
+
+/// finds typography @param {String} $name in @param {Map} $typemap, @returns $attr
+@function typemaps-get-font-attr($name, $attr: font-size, $typemap: $typemap) {
+	@if (type-of($typemap) == 'map') {
+		@if ($name and map-has-key($typemap, $name)) {
+			$typemap: map-get($typemap, $name);
+		}
+		$fontAttr: map-get($typemap, $attr);
+		@debug '$fontAttr: #{$fontAttr}';
+
+		@if $fontAttr {
+			@return $fontAttr;
+		}
+	} @else {
+		@warn "Type of `$typemap is not `map` - #{type-of($typemap)}`, #{$typemap}";
+	}
+	@return 1;
+}
+
+/// Loops though a map to render styles
 @mixin typography(
 	$font-size: var(--font-size-body),
 	$font-weight: var(--font-weight-medium),

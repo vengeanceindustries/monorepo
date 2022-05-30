@@ -1,8 +1,8 @@
 const fonts = require('../src/tokens/options/fonts.json');
 const fontImports = fonts.imports;
 
-const FL = require('../src/tokens/themes/banner.FL.json');
-const KFL = require('../src/tokens/themes/banner.KFL.json');
+const FL = require('../tokens/themes/banner.FL.json');
+const KFL = require('../tokens/themes/banner.KFL.json');
 const allBannerTokens = { FL, KFL } as const;
 type BannerName = keyof typeof allBannerTokens;
 

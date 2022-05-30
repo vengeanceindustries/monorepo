@@ -1,6 +1,3 @@
-// Type definitions for ui-library 1.0.0
-/// <reference path="ui-library" />
-
 declare global {
 	interface BemClasses {
 		/** any className to add to an element */

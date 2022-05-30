@@ -11,7 +11,7 @@
 		"prestart": "yarn run build:tokens",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"build:tokens": "node utils/generator.write.js"
+		"build:tokens": "node src/utils/generator.write.js"
 	},
 	"dependencies": {
 		"cross-env": "5.0.5",

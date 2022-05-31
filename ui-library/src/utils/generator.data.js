@@ -110,21 +110,21 @@ ${objectAndType({
 	queryName: Object.keys(query),
 })}`;
 
-// let colorData =
-// 	objectNameAndType('color', color) +
-// 	'\n\n' +
-// 	tsObject({ globalColors: color });
-
 let colorData = `${objectNameAndType('color', color)}
 export const globalColors = color;
-${tsObject({ bannerColors })}
-`;
+${tsObject({ bannerColors })}`;
 
 let contentData = objectNameAndType('content', content);
 
-let columnData = objectNameAndType('column', column);
-
 let themeData = objectNameAndType('theme', theme);
+
+// let columnData = objectNameAndType('column', column);
+let columnData = `${FILE_COMMENT('column')}
+${tsObject({ column })}\n
+${objectAndType({
+	columnSize: Object.keys(column),
+	columnsName: Object.values(column),
+})}`;
 
 let fontData = `${FILE_COMMENT('fonts')}
 ${tsObject(allFont)}\n

@@ -11,8 +11,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUnusedLocals": true,
 		"paths": {
-			"ui-library": ["ui-library"],
-			"UI-LIB": ["ui-library"]
+			"ui-library": ["ui-library"]
 		},
 		"resolveJsonModule": true,
 		"skipLibCheck": true,

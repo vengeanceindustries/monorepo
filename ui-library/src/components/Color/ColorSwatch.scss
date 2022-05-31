@@ -1,0 +1,34 @@
+.ColorSwatch {
+	padding-top: 100%;
+	border: 1px solid #808080;
+	margin: 1px;
+
+	&--brand-primary {
+		// background-color: $brand_primary;
+		background-color: var(--color-primary);
+	}
+	&--brand-secondary {
+		// background-color: $brand_secondary;
+		background-color: var(--color-secondary);
+	}
+	&--brand-highlight {
+		// background-color: $brand_highlight;
+		background-color: var(--color-highlight);
+	}
+	&--brand-white {
+		// background-color: $brand_white;
+		background-color: var(--color-white);
+	}
+	&--brand-grey {
+		// background-color: $brand_grey;
+		background-color: var(--color-grey);
+	}
+	&--brand-black {
+		// background-color: $brand_black;
+		background-color: var(--color-black);
+	}
+}
+.ColorSwatch-label {
+	line-height: 1.2;
+	margin-top: 0.5rem;
+}

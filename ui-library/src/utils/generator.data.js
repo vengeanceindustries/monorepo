@@ -16,10 +16,26 @@ const { button } = require('../tokens/decisions/components.json');
 // BANNER TOKENS //
 const FL = require('../tokens/themes/banner.FL.json');
 const KFL = require('../tokens/themes/banner.KFL.json');
-const bannerName = [FL.site, KFL.site];
+const bannerObj = [FL, KFL];
+
+const bannerNames = bannerObj.reduce((all, banner) => {
+	const site = banner.site.replace(/'/g, '');
+	all[site] = banner.name.replace(/'/g, '');
+	return all;
+}, {});
+
+const bannerColors = bannerObj.reduce((all, banner) => {
+	const site = banner.site.replace(/'/g, '');
+	all[site] = Object.entries(banner.color).reduce((all, [key, val]) => {
+		all[key] = val.replace(/{([^]+)}/g, '$1').replace(/color./g, '');
+		return all;
+	}, {});
+	return all;
+}, {});
 
 let bannerData = `${FILE_COMMENT('banners')}
-${objectAndType({ bannerName })}`;
+${tsObject({ bannerNames })}
+${objectAndType({ banners: bannerObj.map(({ site }) => site) })}`;
 
 // FONT //
 const { family: families, imports, ...font } = fonts;
@@ -38,6 +54,15 @@ const fontObj = {
 const { breakpoints, content, grid, spacing } = layout;
 const column = layout.columns;
 const gridBase = grid.base;
+
+const spacingSize = Object.keys(spacing)
+	.map((val) => (isNaN(val) ? val : Number(val)))
+	.sort((a, b) => {
+		// sort strings before numbers, then numerical order
+		const aString = typeof a === 'string';
+		const bString = typeof b === 'string';
+		return aString ? (bString ? 1 : -1) : a < b ? -1 : 1;
+	});
 
 const bpObj = {};
 const query = {};
@@ -85,7 +110,15 @@ ${objectAndType({
 	queryName: Object.keys(query),
 })}`;
 
-let colorData = objectNameAndType('color', color);
+// let colorData =
+// 	objectNameAndType('color', color) +
+// 	'\n\n' +
+// 	tsObject({ globalColors: color });
+
+let colorData = `${objectNameAndType('color', color)}
+export const globalColors = color;
+${tsObject({ bannerColors })}
+`;
 
 let contentData = objectNameAndType('content', content);
 
@@ -99,7 +132,7 @@ ${objectAndType(fontObj)}`;
 
 let spacingData = `${FILE_COMMENT('spacing')}
 ${tsObject({ spacing })}
-${objectAndType({ spacingName: Object.keys(spacing).map(Number).sort() })}`;
+${objectAndType({ spacingSize })}`;
 
 let buttonData = `${FILE_COMMENT('button')}
 ${objectAndType({ button }, true)}`;

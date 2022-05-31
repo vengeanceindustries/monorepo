@@ -1,45 +1,65 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
-import Spacing, { SpacingProps } from './Spacing';
-import { CTAButton } from '../Button';
+import { Button, Spacing, spacingSize } from 'ui-library';
+import { SpacingProps } from './Spacing';
+
+const control = { type: 'select', options: spacingSize };
 
 export default {
-	title: 'Example/Spacing',
+	title: 'Design Tokens/Spacing',
 	component: Spacing,
 	argTypes: {
-		children: { control: 'none' },
+		margin: { control },
+		marginBottom: { control },
+		marginLeft: { control },
+		marginRight: { control },
+		marginTop: { control },
+		padding: { control },
+		paddingBottom: { control },
+		paddingLeft: { control },
+		paddingRight: { control },
+		paddingTop: { control },
+		children: { table: { disable: true } },
+		// children: { control: 'none' },
 	},
+	args: {},
 } as Meta<typeof Spacing>;
 
 const Template: Story<SpacingProps> = (args) => <Spacing {...args} />;
 
 export const SpacingAroundButton = Template.bind({});
 SpacingAroundButton.args = {
-	children: <CTAButton text="button with spacing around" />,
+	children: <Button text="button with spacing around" />,
 	padding: 1,
 };
 
 export const Padding1 = Template.bind({});
 Padding1.args = {
-	children: 'Foo? bar',
+	children: 'Padding1',
 	padding: 1,
 };
 
 export const Padding2 = Template.bind({});
 Padding2.args = {
-	children: <div>Foo bar</div>,
+	children: <div>Padding2</div>,
 	padding: 2,
+};
+
+export const PaddingLeft = Template.bind({});
+Padding2.args = {
+	children: <div>PaddingLeft</div>,
+	paddingLeft: 2,
 };
 
 export const Margin1 = Template.bind({});
 Margin1.args = {
-	children: <div>Foobar</div>,
+	children: <div>Margin1</div>,
 	margin: 1,
 };
 
 export const Margin2 = Template.bind({});
 Margin2.args = {
-	children: <div>Fooobarr</div>,
+	children: <div>Margin2</div>,
 	margin: 2,
 };

@@ -1,7 +1,17 @@
 // UTILS //
 
-function FILE_COMMENT(tokenType) {
-	return `// auto-generated file - ${tokenType} - design system values //\n`;
+function BLOCK_COMMENT(text) {
+	return `/* ${text} */\n`;
+}
+function INLINE_COMMENT(text) {
+	return `// ${text} //\n`;
+}
+
+function FILE_COMMENT(tokenType, blockComment = false) {
+	const text = `auto-generated file -${
+		tokenType ? ` ${tokenType} -` : ''
+	} design system values`;
+	return blockComment ? BLOCK_COMMENT(text) : INLINE_COMMENT(text);
 }
 
 function log(text, ...args) {
@@ -281,6 +291,19 @@ function sassVariable(obj) {
 	return flattenToVariable(obj, { prefix: '$', useSassVar: true });
 }
 
+function sassVariables(obj) {
+	if (!isTrueObject(obj)) {
+		warn('sassVariable', 'cannot create styles from non-object', obj);
+		return '';
+	}
+	return Object.entries(obj)
+		.map(([key, val]) => {
+			const data = { [key]: val };
+			return variablesMap(data, false) + sassVariable(data);
+		})
+		.join('\r');
+}
+
 function jsonToStyles(obj, space = '\t') {
 	if (!isTrueObject(obj)) {
 		warn('jsonToStyles', 'attempting to strigify a non-object', obj);
@@ -440,7 +463,8 @@ function objectAndType(obj, flatten = false) {
 function objectNameAndType(name, obj) {
 	return `${FILE_COMMENT(name)}
 ${tsObject({ [name]: obj })}\n
-${objectAndType({ [`${name}Name`]: Object.keys(obj) })}`;
+${objectAndType({ [`${name}Name`]: Object.keys(obj) })}
+`;
 }
 
 module.exports = {
@@ -455,6 +479,7 @@ module.exports = {
 	objectAndType,
 	objectNameAndType,
 	sassVariable,
+	sassVariables,
 	styleBlock,
 	unionType,
 	updateFontFamilyReferences,

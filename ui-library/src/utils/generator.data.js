@@ -2,7 +2,9 @@ const {
 	FILE_COMMENT,
 	objectAndType,
 	objectNameAndType,
+	sassVariable,
 	tsObject,
+	variablesMap,
 } = require('./jsonToCssScssTs');
 
 // GLOBAL TOKENS //
@@ -52,8 +54,16 @@ const fontObj = {
 
 // LAYOUT //
 const { breakpoints, content, grid, spacing } = layout;
+
 const column = layout.columns;
 const gridBase = grid.base;
+
+const contentSize = Object.keys(content);
+
+const contentWidth = Object.entries(content).reduce((all, [id, value]) => {
+	all[id] = typeof value === 'number' ? `${value / gridBase}rem` : value;
+	return all;
+}, {});
 
 const spacingSize = Object.keys(spacing)
 	.map((val) => (isNaN(val) ? val : Number(val)))
@@ -114,7 +124,12 @@ let colorData = `${objectNameAndType('color', color)}
 export const globalColors = color;
 ${tsObject({ bannerColors })}`;
 
-let contentData = objectNameAndType('content', content);
+const contentClassNames = contentSize.map((name) => `contentWidth:${name}`);
+const contentData =
+	objectNameAndType('content', content) +
+	tsObject({ contentWidth }) +
+	'\r' +
+	tsObject({ contentClassNames });
 
 let themeData = objectNameAndType('theme', theme);
 

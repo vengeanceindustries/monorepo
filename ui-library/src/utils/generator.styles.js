@@ -1,9 +1,11 @@
 const {
+	FILE_COMMENT,
 	bannerProperties,
 	customProperties,
 	fontFamilyReference,
 	fontStylesMap,
 	sassVariable,
+	sassVariables,
 	styleBlock,
 	updateFontFamilyReferences,
 	variablesMap,
@@ -38,7 +40,7 @@ const globalCustomProperties = {
 	theme: FL.theme,
 };
 
-const breakpointSizes = { device: {}, size: {} };
+const breakpoint = { device: {}, size: {} };
 const bp = {};
 const mq = { at: {}, below: {} };
 const mqs = { down: {}, up: {} };
@@ -46,42 +48,39 @@ const mqs = { down: {}, up: {} };
 Object.entries(breakpoints).forEach(([id, { name, value }]) => {
 	const px = `${value}px`;
 	const em = `${value / gridBase}em`;
-	breakpointSizes.size[id] = em;
-	breakpointSizes.device[name] = em;
+	breakpoint.size[id] = em;
+	breakpoint.device[name] = em;
 	bp[name] = em;
 	// mq.at[name] = `(min-width: {bp.${name}})`;
-	// mq.below[name] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
+	// mq.below[name] = `screen and (max-width: {bp.${name} - $onePx-ems})`;
 	// mqs.up[id] = `{mq.at.${name}}`;
 	// mqs.down[id] = `{mq.below.${name}}`;
 	mqs.up[id] = `(min-width: {bp.${name}})`;
-	mqs.down[id] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
+	mqs.down[id] = `screen and (max-width: {bp.${name} - $onePx-ems})`;
 	// breakpointList.mq[`for-${name}-up`] = `(min-width: {bp.${name}})`;
-	// breakpointList.mq[`for-below-${name}`] = `screen and (max-width: {bp.${name} - $one-px-ems})`;
+	// breakpointList.mq[`for-below-${name}`] = `screen and (max-width: {bp.${name} - $onePx-ems})`;
 });
 
-const contentSize = {};
+const contentSize = Object.keys(content);
 
-Object.entries(content).forEach(([id, value]) => {
-	const out = typeof value === 'number' ? `${value / gridBase}em` : value;
-	contentSize[id] = out;
-});
+const contentWidth = Object.entries(content).reduce((all, [id, value]) => {
+	all[id] = typeof value === 'number' ? `${value / gridBase}rem` : value;
+	return all;
+}, {});
 
-const columnSize = {};
+const columnSize = Object.entries(columns).reduce((all, [id, value]) => {
+	all[value] = id;
+	return all;
+}, {});
 
-Object.entries(columns).forEach(([id, value]) => {
-	columnSize[id] = value;
-	columnSize[value] = id;
-});
-
-let css = `/* auto-generated file - design system variables */
-
+let css = `${FILE_COMMENT('', true)}
 :root {
-	/* COLOR VALUES */
+	/* COLORS */
 ${customProperties({ color })}
 	/* COLUMNS */
-${customProperties({ columns: columnSize }, { wrapQuotes: true })}
+${customProperties({ columns, columnSize }, { wrapQuotes: true })}
 	/* CONTENT WIDTHS */
-${customProperties({ content: contentSize })}
+${customProperties({ content, contentWidth })}
 	/* FONTS */
 ${customProperties({
 	font,
@@ -91,40 +90,72 @@ ${customProperties({
 ${customProperties(globalCustomProperties)}
 }
 /* BANNER VARS  */
-${bannerProperties(bannerCustomProperties)}`;
+${bannerProperties(bannerCustomProperties)}
+`;
 
-let scss = `// auto-generated file - design system variables //
-
-// BREAKPOINTS //\r
-${sassVariable({ 'one-px-ems': `${1 / gridBase}em` })}
-${variablesMap({ breakpoint: breakpointSizes }, false)}
-${sassVariable({ bp, mq }, true)}
-${variablesMap({ mqs }, false)}
-// COLOR VALUES
-${variablesMap({ color })}
-${sassVariable({ color })}
+// COLOR //
+const colorScss = `${FILE_COMMENT('COLORS')}
+${sassVariables({ color })}
+\r// Legacy color names //
 ${sassVariable(color)}
-// CONTENT WIDTHS //\r
-${variablesMap({ content: contentSize }, false)}
-${sassVariable({ content: contentSize })}
-// COLUMNS //\r
-${variablesMap({ columns: columnSize }, false)}
-${sassVariable({ columns: columnSize })}
-// FONTS //\r
-${variablesMap({ font }, false)}
-${sassVariable({ font })}`;
-scss += ``;
+`;
+// FONTS //
+const fontScss = `${FILE_COMMENT('FONTS')}
+${sassVariables({ font })}
+\r// FONT MAP //
+${fontStylesMap(fontStyles)}
+`;
 
-const typemaps = `\r${fontStylesMap(fontStyles)}`;
+// LAYOUT  //
+const onePx = {
+	px: '1px',
+	ems: `${1 / gridBase}em`,
+	rems: `${1 / gridBase}rem`,
+};
+const breakpointsScss = `${FILE_COMMENT('BREAKPOINTS')}
+${sassVariables({ onePx, breakpoint, bp })}
+${variablesMap({ mqs }, false)}
+`;
+const columnScss = `${FILE_COMMENT('COLUMNS')}
+${sassVariables({ columns, columnSize })}`;
 
-const themeStyles = `
-// Theme style blocks 
-${styleBlock({ Theme: theme }, '.', '--')}`;
+const contentScss = `${FILE_COMMENT('CONTENT WIDTHS')}
+${variablesMap({ contentSize })}
+${sassVariables({ content, contentWidth })}
 
-scss += `\r// FONT MIXIN w/ STYLE TYPEMAPS //////////////////` + typemaps;
-// scss += `\r// STYLE BLOCKS - TEMPORARY //\r` + buttons + themeStyles;
+.contentWidth {
+	@each $name, $width in $contentWidth {
+		&\:#{$name} {
+			max-width: $width;
+		}
+	}
+}
+`;
+
+// THEMES //
+const themeScss = `${FILE_COMMENT('THEMES')}
+// THEME STYLE BLOCKS - TEMPORARY //
+${styleBlock({ Theme: theme }, '.', '--')}
+`;
+
+let scss = `${FILE_COMMENT()}
+${breakpointsScss}
+${columnScss}
+${contentScss}
+${colorScss}
+${fontScss}
+`;
 
 module.exports = {
+	// banner: bannerScss,
+	breakpoints: breakpointsScss,
+	// button: buttonScss,
+	column: columnScss,
+	color: colorScss,
+	content: contentScss,
+	font: fontScss,
+	// spacing: spacingScss,
+	theme: themeScss,
 	css,
 	scss,
 };

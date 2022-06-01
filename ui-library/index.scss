@@ -1,7 +1,7 @@
 // IMPORTANT! // Any styles generated for design tokens
 // need to be imported here so other packages have access
 @import './dist/index.scss';
-@import './dist/variables.css.scss';
+@import './dist/variables.css';
 @import './src/utils/_index';
 // components: //
 @import './src/components/index';

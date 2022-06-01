@@ -18,14 +18,38 @@ export interface PaddingProps {
 export interface MarginPaddingProps extends MarginProps, PaddingProps {}
 export type SpacingProps = React.PropsWithChildren<MarginPaddingProps>;
 
+export function spacingPropsToClassName(props: MarginPaddingProps) {
+	return propsToClassName(props);
+}
+
 /**
- * add spacing to anything without adding styles
+ * container with margin and/or padding
  */
 export default function Spacing({
 	children,
-	...props
+	margin,
+	marginTop,
+	marginRight,
+	marginBottom,
+	marginLeft,
+	padding,
+	paddingTop,
+	paddingRight,
+	paddingBottom,
+	paddingLeft,
 }: SpacingProps): JSX.Element {
-	const className = propsToClassName(props);
+	const className = spacingPropsToClassName({
+		margin,
+		marginTop,
+		marginRight,
+		marginBottom,
+		marginLeft,
+		padding,
+		paddingTop,
+		paddingRight,
+		paddingBottom,
+		paddingLeft,
+	});
 
 	return <div className={className}>{children}</div>;
 }
